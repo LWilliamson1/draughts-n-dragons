@@ -2,8 +2,103 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSession, signOut } from "next-auth/react";
+import { useState, useRef, useEffect } from "react";
 import TieflingLogo from "./TieflingLogo";
 import { useCart } from "@/contexts/CartContext";
+
+// ── Account button (signed-in / signed-out) ──────────────────────────────────
+
+function AccountMenu() {
+  const { data: session, status } = useSession();
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  // Close on outside click
+  useEffect(() => {
+    function handle(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    }
+    document.addEventListener("mousedown", handle);
+    return () => document.removeEventListener("mousedown", handle);
+  }, []);
+
+  if (status === "loading") {
+    return <div className="w-8 h-8 rounded-full bg-dungeon-purple/40 animate-pulse" />;
+  }
+
+  if (!session) {
+    return (
+      <Link
+        href="/auth/signin"
+        className="font-cinzel text-xs tracking-widest uppercase text-parchment-dark/70
+          hover:text-gold-rune transition-colors duration-200 hidden md:inline"
+      >
+        Sign In
+      </Link>
+    );
+  }
+
+  const { name, email, image } = session.user;
+  const initials = name
+    ? name.split(" ").map((w: string) => w[0]).join("").slice(0, 2).toUpperCase()
+    : email?.[0]?.toUpperCase() ?? "?";
+
+  return (
+    <div ref={ref} className="relative hidden md:block">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-label="Account menu"
+        className="flex items-center gap-2 group"
+      >
+        {image ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={image} alt={name ?? "Avatar"} width={32} height={32}
+            className="rounded-full border border-gold-rune/40 group-hover:border-gold-rune transition-colors" />
+        ) : (
+          <div className="w-8 h-8 rounded-full bg-dungeon-purple border border-gold-rune/30
+            group-hover:border-gold-rune/60 transition-colors
+            flex items-center justify-center font-cinzel text-gold-rune text-xs font-bold">
+            {initials}
+          </div>
+        )}
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"
+          className={`text-parchment-dark/50 transition-transform duration-200 ${open ? "rotate-180" : ""}`}>
+          <path d="M6 8L1 3h10z" />
+        </svg>
+      </button>
+
+      {open && (
+        <div className="absolute right-0 top-full mt-2 w-44 rounded-xl border border-dungeon-purple/40
+          bg-dungeon-dark shadow-[0_8px_30px_rgba(0,0,0,0.5)] overflow-hidden z-50">
+          <div className="px-4 py-3 border-b border-dungeon-purple/20">
+            <p className="font-cinzel text-xs text-gold-rune/80 truncate">{name ?? "Adventurer"}</p>
+            <p className="font-im-fell text-[11px] text-parchment-dark/50 truncate mt-0.5">{email}</p>
+          </div>
+          <Link
+            href="/account"
+            onClick={() => setOpen(false)}
+            className="flex items-center gap-2.5 px-4 py-3 font-cinzel text-xs tracking-wider uppercase
+              text-parchment-dark/70 hover:text-parchment hover:bg-dungeon-purple/20 transition-colors"
+          >
+            <span>⚔️</span> My Account
+          </Link>
+          <button
+            type="button"
+            onClick={() => { setOpen(false); signOut({ callbackUrl: "/" }); }}
+            className="w-full flex items-center gap-2.5 px-4 py-3 font-cinzel text-xs tracking-wider uppercase
+              text-parchment-dark/50 hover:text-dragon-crimson hover:bg-dungeon-purple/20 transition-colors"
+          >
+            <span>🚪</span> Sign Out
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Header ───────────────────────────────────────────────────────────────────
 
 export default function Header() {
   const pathname = usePathname();
@@ -83,9 +178,9 @@ export default function Header() {
               ))}
             </nav>
 
-            {/* Cart + CTA (always visible) */}
+            {/* Right-side actions */}
             <div className="flex items-center gap-3">
-              {/* Cart icon — visible on all screen sizes */}
+              {/* Cart icon */}
               <Link
                 href="/cart"
                 aria-label="View cart"
@@ -107,6 +202,9 @@ export default function Header() {
                   <span className="font-cinzel text-xs tracking-wider uppercase opacity-60 hidden md:inline">Cart</span>
                 )}
               </Link>
+
+              {/* Account */}
+              <AccountMenu />
 
               {/* Book an Event — desktop only */}
               <Link
