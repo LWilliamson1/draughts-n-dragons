@@ -1,0 +1,71 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Event {
+  id           String   @id @default(cuid())
+  date         String
+  dayOfWeek    String
+  month        String
+  year         Int      @default(2026)
+  title        String
+  time         String
+  category     String
+  description  String
+  icon         String
+  price        String
+  spots        String?
+  featured     Boolean  @default(false)
+  published    Boolean  @default(true)
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Offering {
+  id           String   @id @default(cuid())
+  iconType     String
+  title        String
+  subtitle     String
+  tagline      String
+  description  String
+  features     String[]
+  cta          String
+  ctaHref      String
+  badge        String
+  badgeColor   String
+  accentColor  String
+  displayOrder Int      @default(0)
+  published    Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Announcement {
+  id           String   @id @default(cuid())
+  type         String
+  typeColor    String
+  date         String
+  title        String
+  body         String
+  icon         String
+  pinned       Boolean  @default(false)
+  published    Boolean  @default(true)
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}

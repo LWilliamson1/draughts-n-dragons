@@ -1,16 +1,17 @@
-"use client";
-
 import Link from "next/link";
-import { DragonIcon, GobletIcon, PaintbrushIcon, CardIcon, ShieldIcon, D20Icon, MagicStarIcon } from "@/components/Icons";
+import { D20Icon, MagicStarIcon } from "@/components/Icons";
+import { prisma } from "@/lib/prisma";
+import OfferingsGrid, { type OfferingData } from "./OfferingsGrid";
 
-const offerings = [
+const fallbackOfferings: OfferingData[] = [
   {
     id: "event-space",
-    icon: <MagicStarIcon size={56} />,
+    iconType: "magic",
     title: "Private Event Space",
     subtitle: "The Dragon's Den",
     tagline: "Where Legends Are Made",
-    desc: "Rent our enchanted private rooms for campaigns, birthday quests, corporate team-building adventures, or any celebration worthy of a bard's tale. Each space is fully equipped for immersive gaming experiences.",
+    description:
+      "Rent our enchanted private rooms for campaigns, birthday quests, corporate team-building adventures, or any celebration worthy of a bard's tale. Each space is fully equipped for immersive gaming experiences.",
     features: [
       "Up to 12 adventurers per room",
       "Dedicated dungeon master screen & accessories",
@@ -23,16 +24,16 @@ const offerings = [
     ctaHref: "/events#book",
     badge: "PREMIUM",
     badgeColor: "bg-gold-rune text-dungeon-dark",
-    accent: "gold",
     accentColor: "#d4af37",
   },
   {
     id: "minis",
-    icon: <DragonIcon size={56} />,
+    iconType: "dragon",
     title: "Miniatures & Terrain",
     subtitle: "The Armoury",
     tagline: "Forge Your Legend",
-    desc: "Discover our curated selection of high-end resin miniatures, hand-painted display pieces, and immersive terrain kits. From dungeon corridors to dragon lairs — we stock the finest for tabletop adventurers.",
+    description:
+      "Discover our curated selection of high-end resin miniatures, hand-painted display pieces, and immersive terrain kits. From dungeon corridors to dragon lairs — we stock the finest for tabletop adventurers.",
     features: [
       "Reaper Miniatures (Bones & Metal lines)",
       "Games Workshop Warhammer range",
@@ -45,16 +46,16 @@ const offerings = [
     ctaHref: "#minis",
     badge: "IN STORE",
     badgeColor: "bg-dragon-red text-parchment",
-    accent: "red",
     accentColor: "#c0392b",
   },
   {
     id: "paints",
-    icon: <PaintbrushIcon size={56} />,
+    iconType: "paintbrush",
     title: "Paints & Supplies",
     subtitle: "The Alchemist's Bench",
     tagline: "Master Your Palette",
-    desc: "Stock your paint station with the finest pigments in the realm. We carry all major brands and offer expert advice from our in-house painting champions. Beginners and veterans alike will find their perfect colours.",
+    description:
+      "Stock your paint station with the finest pigments in the realm. We carry all major brands and offer expert advice from our in-house painting champions.",
     features: [
       "Citadel / Games Workshop full range",
       "Vallejo Model & Game Colour",
@@ -68,16 +69,16 @@ const offerings = [
     ctaHref: "#paints",
     badge: "RESTOCKED",
     badgeColor: "bg-arcane-purple text-parchment",
-    accent: "purple",
     accentColor: "#9b4dca",
   },
   {
     id: "board-games",
-    icon: <ShieldIcon size={56} />,
+    iconType: "shield",
     title: "Board Games",
     subtitle: "The Game Vault",
     tagline: "Roll. Strategise. Conquer.",
-    desc: "Explore our ever-growing library of board games spanning strategy, co-op, horror, and fantasy. Purchase to own or rent a copy for your session at the tavern. Our staff can recommend the perfect game for your party.",
+    description:
+      "Explore our ever-growing library of board games spanning strategy, co-op, horror, and fantasy. Purchase to own or rent a copy for your session at the tavern.",
     features: [
       "1,000+ titles in stock",
       "In-store play lending library",
@@ -91,16 +92,16 @@ const offerings = [
     ctaHref: "#board-games",
     badge: "1000+ TITLES",
     badgeColor: "bg-dungeon-purple text-parchment",
-    accent: "purple",
     accentColor: "#7b2d8b",
   },
   {
     id: "tcg",
-    icon: <CardIcon size={56} />,
+    iconType: "card",
     title: "Trading Card Games",
     subtitle: "The Card Sanctum",
     tagline: "Shuffle. Draw. Dominate.",
-    desc: "For the collectors and competitors — our TCG section carries the widest selection of sealed product, singles, and accessories. Whether you're building your first deck or hunting that elusive mythic rare, we have you covered.",
+    description:
+      "For the collectors and competitors — our TCG section carries the widest selection of sealed product, singles, and accessories.",
     features: [
       "Magic: The Gathering — all sets",
       "Pokémon TCG — current & vintage",
@@ -114,16 +115,16 @@ const offerings = [
     ctaHref: "#tcg",
     badge: "FNM HOST",
     badgeColor: "bg-gold-rune text-dungeon-dark",
-    accent: "gold",
     accentColor: "#d4af37",
   },
   {
     id: "bar",
-    icon: <GobletIcon size={56} />,
+    iconType: "goblet",
     title: "The Enchanted Bar",
     subtitle: "Brews & Potions",
     tagline: "A Drink for Every Class",
-    desc: "Our tiefling bartender has brewed a potion for every alignment. From hoppy IPAs to dark stouts, craft cocktails named after legendary spells, and a rotating selection from local breweries. Non-alcoholic adventurers are also catered for!",
+    description:
+      "Our tiefling bartender has brewed a potion for every alignment. From hoppy IPAs to dark stouts, craft cocktails named after legendary spells, and a rotating selection from local breweries.",
     features: [
       "24 rotating craft ales on draught",
       "Cocktails themed by D&D class & spell",
@@ -136,12 +137,24 @@ const offerings = [
     ctaHref: "#bar",
     badge: "24 ON TAP",
     badgeColor: "bg-tavern-brown text-parchment",
-    accent: "brown",
     accentColor: "#8b5e3c",
   },
 ];
 
-export default function OfferingsPage() {
+async function getOfferings(): Promise<OfferingData[]> {
+  try {
+    const rows = await prisma.offering.findMany({
+      where: { published: true },
+      orderBy: { displayOrder: "asc" },
+    });
+    if (rows.length > 0) return rows;
+  } catch {}
+  return fallbackOfferings;
+}
+
+export default async function OfferingsPage() {
+  const offerings = await getOfferings();
+
   return (
     <div className="relative overflow-hidden">
 
@@ -170,89 +183,7 @@ export default function OfferingsPage() {
 
       {/* ─── OFFERINGS GRID ─────────────────────────────────────── */}
       <section className="py-10 pb-24 px-4">
-        <div className="max-w-6xl mx-auto space-y-12">
-          {offerings.map((item, idx) => (
-            <div
-              key={item.id}
-              id={item.id}
-              className={`offering-card flex flex-col ${
-                idx % 2 === 1 ? "md:flex-row-reverse" : "md:flex-row"
-              } overflow-hidden`}
-            >
-              {/* Icon / visual panel */}
-              <div
-                className="md:w-72 flex-shrink-0 flex flex-col items-center justify-center p-10 gap-4"
-                style={{
-                  background: `linear-gradient(135deg, rgba(74,45,110,0.4), rgba(13,10,14,0.6))`,
-                  borderRight: idx % 2 === 0 ? `1px solid ${item.accentColor}30` : "none",
-                  borderLeft: idx % 2 === 1 ? `1px solid ${item.accentColor}30` : "none",
-                }}
-              >
-                <div
-                  className="rounded-full p-5 border-2"
-                  style={{
-                    borderColor: item.accentColor,
-                    boxShadow: `0 0 30px ${item.accentColor}40`,
-                    background: "rgba(13,10,14,0.5)",
-                  }}
-                >
-                  {item.icon}
-                </div>
-                <span className={`event-tag font-cinzel text-xs ${item.badgeColor}`}>
-                  {item.badge}
-                </span>
-                <div className="text-center">
-                  <div className="font-im-fell italic text-parchment-dark opacity-50 text-sm">{item.subtitle}</div>
-                </div>
-              </div>
-
-              {/* Content */}
-              <div className="flex-1 p-8 md:p-10">
-                <p
-                  className="font-im-fell italic text-sm mb-1 tracking-widest"
-                  style={{ color: item.accentColor }}
-                >
-                  {item.tagline}
-                </p>
-                <h2 className="font-cinzel text-parchment text-2xl md:text-3xl font-bold mb-3">
-                  {item.title}
-                </h2>
-                <p className="font-im-fell text-parchment-dark opacity-70 text-base leading-relaxed mb-6">
-                  {item.desc}
-                </p>
-
-                {/* Features list */}
-                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-8">
-                  {item.features.map((feat) => (
-                    <li key={feat} className="flex items-start gap-2 font-im-fell text-parchment-dark opacity-70 text-sm">
-                      <span style={{ color: item.accentColor }} className="mt-0.5 flex-shrink-0">✦</span>
-                      {feat}
-                    </li>
-                  ))}
-                </ul>
-
-                <Link
-                  href={item.ctaHref}
-                  className="inline-block font-cinzel text-sm tracking-wider uppercase px-6 py-2.5 rounded border transition-all duration-300"
-                  style={{
-                    borderColor: item.accentColor,
-                    color: item.accentColor,
-                  }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLElement).style.backgroundColor = item.accentColor;
-                    (e.currentTarget as HTMLElement).style.color = "#0d0a0e";
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.backgroundColor = "transparent";
-                    (e.currentTarget as HTMLElement).style.color = item.accentColor;
-                  }}
-                >
-                  {item.cta} →
-                </Link>
-              </div>
-            </div>
-          ))}
-        </div>
+        <OfferingsGrid offerings={offerings} />
       </section>
 
       {/* ─── BOOKING BANNER ─────────────────────────────────────── */}

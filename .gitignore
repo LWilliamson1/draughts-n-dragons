@@ -10,3 +10,5 @@ out/
 *.pem
 .env*
 !.env.example
+
+/app/generated/prisma
