@@ -25,7 +25,8 @@ export default function EventForm({ event, action }: Props) {
     description: event?.description ?? "",
     icon: event?.icon ?? "🎲",
     price: event?.price ?? "FREE",
-    spots: event?.spots ?? "",
+    capacity: event?.capacity != null ? String(event.capacity) : "",
+    signups: String(event?.signups ?? 0),
     featured: event?.featured ?? false,
     published: event?.published ?? true,
     displayOrder: String(event?.displayOrder ?? 0),
@@ -82,15 +83,21 @@ export default function EventForm({ event, action }: Props) {
         <textarea value={form.description} onChange={(e) => set("description", e.target.value)} rows={4} required className={`${inputCls} resize-y`} />
       </Field>
 
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 gap-4">
         <Field label="Icon (emoji)">
           <input value={form.icon} onChange={(e) => set("icon", e.target.value)} className={inputCls} />
         </Field>
         <Field label="Price">
           <input value={form.price} onChange={(e) => set("price", e.target.value)} placeholder="$5 Entry" className={inputCls} />
         </Field>
-        <Field label="Spots Available">
-          <input value={form.spots} onChange={(e) => set("spots", e.target.value)} placeholder="12 spots left" className={inputCls} />
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <Field label="Capacity" hint="leave blank for unlimited">
+          <input type="number" min="1" value={form.capacity} onChange={(e) => set("capacity", e.target.value)} placeholder="—" className={inputCls} />
+        </Field>
+        <Field label="Current Signups">
+          <input type="number" min="0" value={form.signups} onChange={(e) => set("signups", e.target.value)} className={inputCls} />
         </Field>
       </div>
 

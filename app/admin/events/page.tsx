@@ -41,6 +41,7 @@ export default async function AdminEventsPage() {
                 <th className="font-cinzel text-xs text-parchment-dark opacity-50 tracking-widest text-left px-4 py-3 uppercase">Title</th>
                 <th className="font-cinzel text-xs text-parchment-dark opacity-50 tracking-widest text-left px-4 py-3 uppercase hidden md:table-cell">Category</th>
                 <th className="font-cinzel text-xs text-parchment-dark opacity-50 tracking-widest text-left px-4 py-3 uppercase hidden lg:table-cell">Price</th>
+                <th className="font-cinzel text-xs text-parchment-dark opacity-50 tracking-widest text-left px-4 py-3 uppercase hidden lg:table-cell">Signups</th>
                 <th className="font-cinzel text-xs text-parchment-dark opacity-50 tracking-widest text-left px-4 py-3 uppercase">Status</th>
                 <th className="px-4 py-3"></th>
               </tr>
@@ -67,6 +68,9 @@ export default async function AdminEventsPage() {
                   </td>
                   <td className="px-4 py-3 hidden lg:table-cell font-im-fell text-parchment-dark opacity-60 text-sm">
                     {event.price}
+                  </td>
+                  <td className="px-4 py-3 hidden lg:table-cell font-im-fell text-parchment-dark opacity-60 text-sm">
+                    {event.capacity ? `${event.signups} / ${event.capacity}` : "—"}
                   </td>
                   <td className="px-4 py-3">
                     <span className={`inline-block w-2 h-2 rounded-full mr-2 ${event.published ? "bg-green-500" : "bg-gray-500"}`} />
