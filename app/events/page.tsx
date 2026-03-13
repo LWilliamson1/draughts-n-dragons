@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { D20Icon, PaintbrushIcon, CardIcon, GobletIcon, MagicStarIcon, DragonIcon, ScrollIcon } from "@/components/Icons";
+import { prisma } from "@/lib/prisma";
 
 type EventCategory = "ALL" | "WORKSHOP" | "TOURNAMENT" | "PINT NIGHT" | "CAMPAIGN" | "COMMUNITY";
 
 interface CalendarEvent {
-  id: number;
+  id: string;
   date: string;
   dayOfWeek: string;
   month: string;
@@ -21,7 +22,7 @@ interface CalendarEvent {
 const events: CalendarEvent[] = [
   // March 2026
   {
-    id: 1,
+    id: "1",
     date: "21",
     dayOfWeek: "Saturday",
     month: "March",
@@ -35,7 +36,7 @@ const events: CalendarEvent[] = [
     featured: true,
   },
   {
-    id: 2,
+    id: "2",
     date: "22",
     dayOfWeek: "Sunday",
     month: "March",
@@ -48,7 +49,7 @@ const events: CalendarEvent[] = [
     spots: "8 spots left",
   },
   {
-    id: 3,
+    id: "3",
     date: "27",
     dayOfWeek: "Friday",
     month: "March",
@@ -61,7 +62,7 @@ const events: CalendarEvent[] = [
     spots: "12 spots left",
   },
   {
-    id: 4,
+    id: "4",
     date: "28",
     dayOfWeek: "Saturday",
     month: "March",
@@ -75,7 +76,7 @@ const events: CalendarEvent[] = [
   },
   // April 2026
   {
-    id: 5,
+    id: "5",
     date: "3",
     dayOfWeek: "Friday",
     month: "April",
@@ -88,7 +89,7 @@ const events: CalendarEvent[] = [
     spots: "16 spots",
   },
   {
-    id: 6,
+    id: "6",
     date: "5",
     dayOfWeek: "Sunday",
     month: "April",
@@ -101,7 +102,7 @@ const events: CalendarEvent[] = [
     spots: "Open",
   },
   {
-    id: 7,
+    id: "7",
     date: "10",
     dayOfWeek: "Friday",
     month: "April",
@@ -114,7 +115,7 @@ const events: CalendarEvent[] = [
     spots: "20 spots",
   },
   {
-    id: 8,
+    id: "8",
     date: "12",
     dayOfWeek: "Sunday",
     month: "April",
@@ -127,7 +128,7 @@ const events: CalendarEvent[] = [
     spots: "3 spots left",
   },
   {
-    id: 9,
+    id: "9",
     date: "19",
     dayOfWeek: "Sunday",
     month: "April",
@@ -140,7 +141,7 @@ const events: CalendarEvent[] = [
     spots: "24 spots",
   },
   {
-    id: 10,
+    id: "10",
     date: "26",
     dayOfWeek: "Sunday",
     month: "April",
@@ -153,7 +154,7 @@ const events: CalendarEvent[] = [
     spots: "Open",
   },
   {
-    id: 11,
+    id: "11",
     date: "30",
     dayOfWeek: "Thursday",
     month: "April",
@@ -167,7 +168,7 @@ const events: CalendarEvent[] = [
   },
   // May 2026
   {
-    id: 12,
+    id: "12",
     date: "4",
     dayOfWeek: "Monday",
     month: "May",
@@ -180,7 +181,7 @@ const events: CalendarEvent[] = [
     spots: "Open",
   },
   {
-    id: 13,
+    id: "13",
     date: "16",
     dayOfWeek: "Saturday",
     month: "May",
@@ -211,12 +212,38 @@ const categoryIcons: Record<Exclude<EventCategory, "ALL">, React.ReactNode> = {
   COMMUNITY: <D20Icon size={20} />,
 };
 
-const months = ["March", "April", "May"];
+async function getEvents(): Promise<CalendarEvent[]> {
+  try {
+    const rows = await prisma.event.findMany({
+      where: { published: true },
+      orderBy: [{ year: "asc" }, { displayOrder: "asc" }, { date: "asc" }],
+    });
+    if (rows.length > 0) {
+      return rows.map((r) => ({
+        id: r.id,
+        date: r.date,
+        dayOfWeek: r.dayOfWeek,
+        month: r.month,
+        title: r.title,
+        time: r.time,
+        category: r.category as Exclude<EventCategory, "ALL">,
+        desc: r.description,
+        icon: r.icon,
+        price: r.price,
+        spots: r.spots ?? undefined,
+        featured: r.featured,
+      }));
+    }
+  } catch {}
+  return events;
+}
 
-export default function EventsPage() {
+export default async function EventsPage() {
+  const allEvents = await getEvents();
+  const months = [...new Set(allEvents.map((e) => e.month))];
   const groupedEvents = months.map((month) => ({
     month,
-    events: events.filter((e) => e.month === month),
+    events: allEvents.filter((e) => e.month === month),
   }));
 
   return (
@@ -266,7 +293,7 @@ export default function EventsPage() {
             ✦ Featured Events ✦
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {events.filter((e) => e.featured).map((event) => (
+            {allEvents.filter((e) => e.featured).map((event) => (
               <div
                 key={event.id}
                 className="event-card border-gold-rune relative overflow-hidden"

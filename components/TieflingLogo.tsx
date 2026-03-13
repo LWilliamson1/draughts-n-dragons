@@ -1,11 +1,34 @@
 "use client";
 
+import Image from "next/image";
+
 interface TieflingLogoProps {
   size?: number;
   className?: string;
 }
 
 export default function TieflingLogo({ size = 120, className = "" }: TieflingLogoProps) {
+  // Uses the uploaded medallion logo when available; falls back to the inline SVG.
+  return (
+    <Image
+      src="/images/logo-medallion.png"
+      alt="Draughts & Dragons — Tiefling Bartender Logo"
+      width={size}
+      height={size}
+      className={className}
+      priority
+      onError={(e) => {
+        // If image fails to load, hide it (SVG fallback is rendered below)
+        (e.currentTarget as HTMLElement).style.display = "none";
+        const fallback = (e.currentTarget as HTMLElement).nextElementSibling as HTMLElement | null;
+        if (fallback) fallback.style.display = "";
+      }}
+    />
+  );
+}
+
+/** SVG fallback — used if the PNG image is not yet uploaded */
+export function TieflingLogoSVG({ size = 120, className = "" }: TieflingLogoProps) {
   return (
     <svg
       width={size}

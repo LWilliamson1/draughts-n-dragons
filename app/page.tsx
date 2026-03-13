@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { D20Icon, DragonIcon, GobletIcon, ScrollIcon, MagicStarIcon } from "@/components/Icons";
 import TieflingLogo from "@/components/TieflingLogo";
+import { prisma } from "@/lib/prisma";
 
-const announcements = [
+const fallbackAnnouncements = [
   {
-    id: 1,
+    id: "1",
     type: "EVENT",
     typeColor: "bg-arcane-purple text-parchment",
     date: "March 21, 2026",
@@ -37,7 +38,7 @@ const announcements = [
     pinned: false,
   },
   {
-    id: 4,
+    id: "4",
     type: "COMMUNITY",
     typeColor: "bg-dragon-red text-parchment",
     date: "March 10, 2026",
@@ -49,7 +50,7 @@ const announcements = [
   },
 ];
 
-const featuredOfferings = [
+const staticFeaturedOfferings = [
   {
     icon: <DragonIcon size={48} />,
     title: "Minis & Terrain",
@@ -70,15 +71,33 @@ const featuredOfferings = [
   },
 ];
 
-export default function HomePage() {
+async function getAnnouncements() {
+  try {
+    const rows = await prisma.announcement.findMany({
+      where: { published: true },
+      orderBy: [{ pinned: "desc" }, { displayOrder: "asc" }, { createdAt: "desc" }],
+      take: 6,
+    });
+    return rows.length > 0 ? rows : fallbackAnnouncements;
+  } catch {
+    return fallbackAnnouncements;
+  }
+}
+
+export default async function HomePage() {
+  const announcements = await getAnnouncements();
   return (
     <div className="relative overflow-hidden">
 
       {/* ─── HERO ─────────────────────────────────────────────── */}
       <section className="relative min-h-[92vh] flex flex-col items-center justify-center text-center px-4 overflow-hidden">
 
-        {/* Atmospheric background */}
+        {/* Atmospheric background — tavern scene image when available */}
         <div className="absolute inset-0 bg-dungeon-black" />
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-30"
+          style={{ backgroundImage: "url('/images/hero-tavern.jpg')" }}
+        />
         <div
           className="absolute inset-0 opacity-30"
           style={{
@@ -207,7 +226,7 @@ export default function HomePage() {
             </span>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {featuredOfferings.map((item) => (
+            {staticFeaturedOfferings.map((item) => (
               <Link
                 key={item.title}
                 href={item.href}
