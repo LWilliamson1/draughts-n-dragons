@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useActionState } from "react";
+import { useState, useActionState, Suspense } from "react";
 import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -184,75 +184,85 @@ function SignUpForm({ onSuccess }: { onSuccess: (email: string) => void }) {
   );
 }
 
-// ── Page ─────────────────────────────────────────────────────────────────────
+// ── Inner content (uses useSearchParams) ────────────────────────────────────
 
-export default function SignInPage() {
+function SignInContent() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") ?? "/account";
   const [mode, setMode] = useState<Mode>("signin");
 
   return (
+    <>
+      <p className="font-im-fell italic text-parchment-dark/60 text-sm mt-1">
+        {mode === "signin" ? "Welcome back, adventurer." : "Join the party."}
+      </p>
+
+      {/* Card */}
+      <div className="bg-dungeon-dark rounded-2xl border border-dungeon-purple/40 p-8 mt-6"
+        style={{ boxShadow: "0 0 40px rgba(74,45,110,0.3)" }}>
+
+        {/* Mode toggle */}
+        <div className="flex rounded-lg border border-dungeon-purple/40 overflow-hidden mb-6">
+          {(["signin", "signup"] as Mode[]).map((m) => (
+            <button
+              key={m}
+              type="button"
+              onClick={() => setMode(m)}
+              className={`flex-1 font-cinzel text-xs tracking-widest uppercase py-2.5 transition-all duration-200
+                ${mode === m
+                  ? "bg-dungeon-purple text-parchment"
+                  : "text-parchment-dark/60 hover:text-parchment-dark"
+                }`}
+            >
+              {m === "signin" ? "Sign In" : "Sign Up"}
+            </button>
+          ))}
+        </div>
+
+        {/* Google */}
+        <GoogleButton callbackUrl={callbackUrl} />
+
+        {/* Divider */}
+        <div className="flex items-center gap-3 my-5">
+          <div className="flex-1 h-px bg-dungeon-purple/40" />
+          <span className="font-cinzel text-xs tracking-widest uppercase text-parchment-dark/40">or</span>
+          <div className="flex-1 h-px bg-dungeon-purple/40" />
+        </div>
+
+        {/* Credentials form */}
+        {mode === "signin" ? (
+          <SignInForm callbackUrl={callbackUrl} />
+        ) : (
+          <SignUpForm onSuccess={() => { window.location.href = callbackUrl; }} />
+        )}
+
+        {/* Admin link */}
+        <p className="text-center font-im-fell italic text-parchment-dark/40 text-xs mt-6">
+          Staff?{" "}
+          <Link href="/admin/login" className="underline hover:text-parchment-dark/70 transition-colors">
+            Admin portal
+          </Link>
+        </p>
+      </div>
+    </>
+  );
+}
+
+// ── Page ─────────────────────────────────────────────────────────────────────
+
+export default function SignInPage() {
+  return (
     <div className="min-h-screen bg-dungeon-black flex items-center justify-center px-4 py-16">
       <div className="w-full max-w-md">
-
-        {/* Logo */}
-        <div className="flex flex-col items-center mb-8">
+        <div className="flex flex-col items-center mb-2">
           <TieflingLogo size={72} />
           <h1 className="font-cinzel-decorative text-gold-rune text-2xl font-black mt-4">
             Draughts &amp; Dragons
           </h1>
-          <p className="font-im-fell italic text-parchment-dark/60 text-sm mt-1">
-            {mode === "signin" ? "Welcome back, adventurer." : "Join the party."}
-          </p>
         </div>
-
-        {/* Card */}
-        <div className="bg-dungeon-dark rounded-2xl border border-dungeon-purple/40 p-8"
-          style={{ boxShadow: "0 0 40px rgba(74,45,110,0.3)" }}>
-
-          {/* Mode toggle */}
-          <div className="flex rounded-lg border border-dungeon-purple/40 overflow-hidden mb-6">
-            {(["signin", "signup"] as Mode[]).map((m) => (
-              <button
-                key={m}
-                type="button"
-                onClick={() => setMode(m)}
-                className={`flex-1 font-cinzel text-xs tracking-widest uppercase py-2.5 transition-all duration-200
-                  ${mode === m
-                    ? "bg-dungeon-purple text-parchment"
-                    : "text-parchment-dark/60 hover:text-parchment-dark"
-                  }`}
-              >
-                {m === "signin" ? "Sign In" : "Sign Up"}
-              </button>
-            ))}
-          </div>
-
-          {/* Google */}
-          <GoogleButton callbackUrl={callbackUrl} />
-
-          {/* Divider */}
-          <div className="flex items-center gap-3 my-5">
-            <div className="flex-1 h-px bg-dungeon-purple/40" />
-            <span className="font-cinzel text-xs tracking-widest uppercase text-parchment-dark/40">or</span>
-            <div className="flex-1 h-px bg-dungeon-purple/40" />
-          </div>
-
-          {/* Credentials form */}
-          {mode === "signin" ? (
-            <SignInForm callbackUrl={callbackUrl} />
-          ) : (
-            <SignUpForm onSuccess={() => { window.location.href = callbackUrl; }} />
-          )}
-
-          {/* Admin link */}
-          <p className="text-center font-im-fell italic text-parchment-dark/40 text-xs mt-6">
-            Staff?{" "}
-            <Link href="/admin/login" className="underline hover:text-parchment-dark/70 transition-colors">
-              Admin portal
-            </Link>
-          </p>
-        </div>
+        <Suspense fallback={<div className="mt-6 h-96 rounded-2xl bg-dungeon-dark border border-dungeon-purple/40 animate-pulse" />}>
+          <SignInContent />
+        </Suspense>
       </div>
     </div>
   );
