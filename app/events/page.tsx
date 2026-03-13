@@ -15,7 +15,8 @@ interface CalendarEvent {
   desc: string;
   icon: string;
   price: string;
-  spots?: string;
+  capacity?: number | null;
+  signups?: number;
   featured?: boolean;
 }
 
@@ -32,7 +33,6 @@ const events: CalendarEvent[] = [
     desc: "Celebrate our grand opening with half-price pints, live bardic performances, and a special welcome from our tiefling bartender. First 50 guests receive an exclusive commemorative stein.",
     icon: "🐉",
     price: "FREE ENTRY",
-    spots: "Open",
     featured: true,
   },
   {
@@ -46,7 +46,7 @@ const events: CalendarEvent[] = [
     desc: "Master the art of Contrast paints with our in-house painter. Perfect for beginners and veterans looking to speed up their workflow. All materials provided. Bring a mini or use one of ours.",
     icon: "🎨",
     price: "$15",
-    spots: "8 spots left",
+    capacity: 10, signups: 0,
   },
   {
     id: "3",
@@ -59,7 +59,7 @@ const events: CalendarEvent[] = [
     desc: "Weekly FNM tournament running Modern format. Entry fee includes prize store credit. Pre-registration required. Prizes awarded to top 4 players. Proxy-friendly practice pods available before the main event.",
     icon: "🃏",
     price: "$5 Entry",
-    spots: "12 spots left",
+    capacity: 16, signups: 0,
   },
   {
     id: "4",
@@ -72,7 +72,7 @@ const events: CalendarEvent[] = [
     desc: "A self-contained one-shot adventure for 4–6 players. Pre-generated characters provided. No experience necessary! Dungeon Master: our very own Guildmaster Thorin Ashrock. Ages 16+.",
     icon: "⚔️",
     price: "$20",
-    spots: "4 spots left",
+    capacity: 6, signups: 0,
   },
   // April 2026
   {
@@ -86,7 +86,7 @@ const events: CalendarEvent[] = [
     desc: "FNM shifts to Pioneer this week! All players welcome. Sideboards encouraged. Entry includes 1 promo pack.",
     icon: "🃏",
     price: "$5 Entry",
-    spots: "16 spots",
+    capacity: 16, signups: 0,
   },
   {
     id: "6",
@@ -99,7 +99,6 @@ const events: CalendarEvent[] = [
     desc: "Misty Mountain Brewery takes over our 6 guest taps for one legendary night. Tasters available. Meet the brewmaster and hear the tales behind each brew.",
     icon: "🍺",
     price: "Pay per pint",
-    spots: "Open",
   },
   {
     id: "7",
@@ -112,7 +111,7 @@ const events: CalendarEvent[] = [
     desc: "Monthly Commander league night. Points accumulate over the season. Bring your best 100-card deck. Prizes for game wins, sportsmanship, and most creative deck.",
     icon: "🃏",
     price: "$8 Entry",
-    spots: "20 spots",
+    capacity: 20, signups: 0,
   },
   {
     id: "8",
@@ -125,7 +124,7 @@ const events: CalendarEvent[] = [
     desc: "Advanced technique workshop covering object source lighting — make your minis glow from within! Recommended for painters with at least 6 months experience. Small class of 6.",
     icon: "🎨",
     price: "$20",
-    spots: "3 spots left",
+    capacity: 6, signups: 0,
   },
   {
     id: "9",
@@ -138,7 +137,7 @@ const events: CalendarEvent[] = [
     desc: "Build and battle with brand new Stellar Crown cards before they hit shelves! Entry includes your prerelease kit. Fun format, prizes for all participants.",
     icon: "⭐",
     price: "$30 Entry",
-    spots: "24 spots",
+    capacity: 24, signups: 0,
   },
   {
     id: "10",
@@ -151,7 +150,6 @@ const events: CalendarEvent[] = [
     desc: "Bring a game, play a game! Our biggest tables are open all day. Board game library is fully accessible. Perfect for trying something new or teaching friends a favourite.",
     icon: "🎲",
     price: "FREE",
-    spots: "Open",
   },
   {
     id: "11",
@@ -164,7 +162,7 @@ const events: CalendarEvent[] = [
     desc: "Elevate your miniatures with stunning bases! Learn scatter grass, water effects, mud, and stone techniques. Materials kit included in price.",
     icon: "🎨",
     price: "$12",
-    spots: "10 spots",
+    capacity: 10, signups: 0,
   },
   // May 2026
   {
@@ -178,7 +176,6 @@ const events: CalendarEvent[] = [
     desc: "May Day celebrations! Special mead and seasonal brews on tap. Games provided, stories welcomed. Costumes encouraged.",
     icon: "🍻",
     price: "Pay per pint",
-    spots: "Open",
   },
   {
     id: "13",
@@ -191,10 +188,17 @@ const events: CalendarEvent[] = [
     desc: "Compete for a regional qualifier slot! Standard format. Top 8 earn invites to the regional championship. Limited spots. Pre-register now to avoid disappointment.",
     icon: "🃏",
     price: "$25 Entry",
-    spots: "32 spots",
+    capacity: 32, signups: 0,
     featured: true,
   },
 ];
+
+function spotsLabel(capacity?: number | null, signups = 0): string | null {
+  if (!capacity) return null;
+  const remaining = capacity - signups;
+  if (remaining <= 0) return "FULL";
+  return `${remaining} spot${remaining === 1 ? "" : "s"} left`;
+}
 
 const categoryColors: Record<Exclude<EventCategory, "ALL">, string> = {
   WORKSHOP: "bg-arcane-purple text-parchment",
@@ -230,7 +234,8 @@ async function getEvents(): Promise<CalendarEvent[]> {
         desc: r.description,
         icon: r.icon,
         price: r.price,
-        spots: r.spots ?? undefined,
+        capacity: r.capacity,
+        signups: r.signups,
         featured: r.featured,
       }));
     }
@@ -322,9 +327,9 @@ export default async function EventsPage() {
                   <div className="flex items-center justify-between border-t border-dungeon-purple pt-4">
                     <div className="flex gap-4">
                       <span className="font-cinzel text-gold-rune text-sm">{event.price}</span>
-                      {event.spots && (
+                      {spotsLabel(event.capacity, event.signups) && (
                         <span className="font-im-fell text-parchment-dark opacity-50 text-sm italic">
-                          {event.spots}
+                          {spotsLabel(event.capacity, event.signups)}
                         </span>
                       )}
                     </div>
@@ -403,9 +408,9 @@ export default async function EventsPage() {
                     <div className="md:w-36 flex-shrink-0 flex flex-col items-center justify-center p-4
                       border-t md:border-t-0 md:border-l border-dungeon-purple text-center gap-2">
                       <div className="font-cinzel text-gold-rune text-sm font-bold">{event.price}</div>
-                      {event.spots && (
+                      {spotsLabel(event.capacity, event.signups) && (
                         <div className="font-im-fell text-parchment-dark opacity-50 text-xs italic">
-                          {event.spots}
+                          {spotsLabel(event.capacity, event.signups)}
                         </div>
                       )}
                       <button

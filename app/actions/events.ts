@@ -15,7 +15,8 @@ export interface EventFormData {
   description: string;
   icon: string;
   price: string;
-  spots: string;
+  capacity: string;
+  signups: string;
   featured: boolean;
   published: boolean;
   displayOrder: string;
@@ -34,7 +35,8 @@ export async function createEvent(data: EventFormData) {
       description: data.description,
       icon: data.icon,
       price: data.price,
-      spots: data.spots || null,
+      capacity: data.capacity ? parseInt(data.capacity) : null,
+      signups: parseInt(data.signups) || 0,
       featured: data.featured,
       published: data.published,
       displayOrder: parseInt(data.displayOrder) || 0,
@@ -59,7 +61,8 @@ export async function updateEvent(id: string, data: EventFormData) {
       description: data.description,
       icon: data.icon,
       price: data.price,
-      spots: data.spots || null,
+      capacity: data.capacity ? parseInt(data.capacity) : null,
+      signups: parseInt(data.signups) || 0,
       featured: data.featured,
       published: data.published,
       displayOrder: parseInt(data.displayOrder) || 0,

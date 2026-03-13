@@ -28,7 +28,8 @@ model Event {
   description  String
   icon         String
   price        String
-  spots        String?
+  capacity     Int?
+  signups      Int      @default(0)
   featured     Boolean  @default(false)
   published    Boolean  @default(true)
   displayOrder Int      @default(0)
