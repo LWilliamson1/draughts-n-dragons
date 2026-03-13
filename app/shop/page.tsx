@@ -384,7 +384,20 @@ const stockColors: Record<Stock, string> = {
 
 export default function ShopPage() {
   const [active, setActive] = useState<Category>("ALL");
+  const [added, setAdded] = useState<string | null>(null);
   const { addItem } = useCart();
+
+  function handleAddToCart(product: Product) {
+    addItem({
+      id: product.id,
+      name: product.name,
+      brand: product.brand,
+      price: product.price,
+      icon: product.icon,
+    });
+    setAdded(product.id);
+    setTimeout(() => setAdded(null), 1200);
+  }
 
   const filtered = active === "ALL" ? products : products.filter((p) => p.category === active);
 
@@ -484,22 +497,20 @@ export default function ShopPage() {
                 <button
                   disabled={product.stock === "Out of Stock"}
                   aria-label={`Add ${product.name} to cart`}
-                  onClick={() =>
-                    addItem({
-                      id: product.id,
-                      name: product.name,
-                      brand: product.brand,
-                      price: product.price,
-                      icon: product.icon,
-                    })
-                  }
-                  className={`w-full font-cinzel text-xs tracking-wider uppercase py-2 rounded-lg transition-all duration-200 ${
+                  onClick={() => handleAddToCart(product)}
+                  className={`w-full font-cinzel text-xs tracking-wider uppercase py-2.5 rounded-lg transition-all duration-200 font-bold ${
                     product.stock === "Out of Stock"
                       ? "border border-dungeon-purple text-parchment-dark opacity-30 cursor-not-allowed"
-                      : "bg-dungeon-dark border border-arcane-violet text-arcane-violet hover:bg-arcane-violet hover:text-parchment"
+                      : added === product.id
+                      ? "bg-green-600 text-parchment border border-green-600"
+                      : "bg-arcane-violet text-parchment border border-arcane-violet hover:bg-arcane-violet/80 active:scale-95"
                   }`}
                 >
-                  {product.stock === "Out of Stock" ? "Unavailable" : "Add to Cart"}
+                  {product.stock === "Out of Stock"
+                    ? "Unavailable"
+                    : added === product.id
+                    ? "✓ Added!"
+                    : "Add to Cart"}
                 </button>
               </div>
             </div>
