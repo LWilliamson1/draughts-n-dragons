@@ -10,6 +10,7 @@ export default function Header() {
   const navLinks = [
     { href: "/", label: "The Tavern" },
     { href: "/offerings", label: "Our Wares" },
+    { href: "/shop", label: "Shop" },
     { href: "/events", label: "Events" },
   ];
 
