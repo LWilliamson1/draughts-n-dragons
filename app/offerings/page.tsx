@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { DragonIcon, GobletIcon, PaintbrushIcon, CardIcon, ShieldIcon, D20Icon, MagicStarIcon } from "@/components/Icons";
 
