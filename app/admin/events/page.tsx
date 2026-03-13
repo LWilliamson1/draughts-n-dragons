@@ -3,9 +3,18 @@ import { prisma } from "@/lib/prisma";
 import DeleteButton from "../_components/DeleteButton";
 import { deleteEvent } from "@/app/actions/events";
 
+const MONTH_INDEX: Record<string, number> = {
+  January: 1, February: 2, March: 3, April: 4, May: 5, June: 6,
+  July: 7, August: 8, September: 9, October: 10, November: 11, December: 12,
+};
+
 export default async function AdminEventsPage() {
-  const events = await prisma.event.findMany({
-    orderBy: [{ year: "asc" }, { month: "asc" }, { displayOrder: "asc" }],
+  const unsorted = await prisma.event.findMany();
+  const events = unsorted.sort((a, b) => {
+    if (a.year !== b.year) return a.year - b.year;
+    const mDiff = (MONTH_INDEX[a.month] ?? 0) - (MONTH_INDEX[b.month] ?? 0);
+    if (mDiff !== 0) return mDiff;
+    return parseInt(a.date) - parseInt(b.date);
   });
 
   return (
