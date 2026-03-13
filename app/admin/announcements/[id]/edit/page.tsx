@@ -23,7 +23,7 @@ export default async function EditAnnouncementPage({ params }: Props) {
         <h1 className="font-cinzel text-gold-rune text-xl font-bold">Edit Announcement</h1>
       </div>
       <div className="bg-dungeon-dark border border-dungeon-purple rounded-xl p-6">
-        <AnnouncementForm announcement={announcement} action={(data) => updateAnnouncement(id, data)} />
+        <AnnouncementForm announcement={announcement} action={updateAnnouncement.bind(null, id)} />
       </div>
     </div>
   );

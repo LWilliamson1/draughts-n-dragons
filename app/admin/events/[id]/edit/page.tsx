@@ -23,7 +23,7 @@ export default async function EditEventPage({ params }: Props) {
         <h1 className="font-cinzel text-gold-rune text-xl font-bold">Edit Event</h1>
       </div>
       <div className="bg-dungeon-dark border border-dungeon-purple rounded-xl p-6">
-        <EventForm event={event} action={(data) => updateEvent(id, data)} />
+        <EventForm event={event} action={updateEvent.bind(null, id)} />
       </div>
     </div>
   );
