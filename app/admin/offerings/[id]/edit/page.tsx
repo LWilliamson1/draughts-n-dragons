@@ -23,7 +23,7 @@ export default async function EditOfferingPage({ params }: Props) {
         <h1 className="font-cinzel text-gold-rune text-xl font-bold">Edit Offering</h1>
       </div>
       <div className="bg-dungeon-dark border border-dungeon-purple rounded-xl p-6">
-        <OfferingForm offering={offering} action={(data) => updateOffering(id, data)} />
+        <OfferingForm offering={offering} action={updateOffering.bind(null, id)} />
       </div>
     </div>
   );
