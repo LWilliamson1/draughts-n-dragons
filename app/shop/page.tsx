@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useCart } from "@/contexts/CartContext";
 
 type Category =
   | "ALL"
@@ -383,6 +384,7 @@ const stockColors: Record<Stock, string> = {
 
 export default function ShopPage() {
   const [active, setActive] = useState<Category>("ALL");
+  const { addItem } = useCart();
 
   const filtered = active === "ALL" ? products : products.filter((p) => p.category === active);
 
@@ -481,6 +483,16 @@ export default function ShopPage() {
                 </div>
                 <button
                   disabled={product.stock === "Out of Stock"}
+                  aria-label={`Add ${product.name} to cart`}
+                  onClick={() =>
+                    addItem({
+                      id: product.id,
+                      name: product.name,
+                      brand: product.brand,
+                      price: product.price,
+                      icon: product.icon,
+                    })
+                  }
                   className={`w-full font-cinzel text-xs tracking-wider uppercase py-2 rounded-lg transition-all duration-200 ${
                     product.stock === "Out of Stock"
                       ? "border border-dungeon-purple text-parchment-dark opacity-30 cursor-not-allowed"
