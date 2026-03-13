@@ -77,7 +77,7 @@ export default function CheckoutPage() {
                   {item.quantity > 1 && <span className="opacity-60"> × {item.quantity}</span>}
                 </span>
                 <span className="font-cinzel text-parchment">
-                  £{(item.price * item.quantity).toFixed(2)}
+                  ${(item.price * item.quantity).toFixed(2)}
                 </span>
               </div>
             ))}
@@ -85,7 +85,7 @@ export default function CheckoutPage() {
           <div className="border-t border-dungeon-purple pt-3 flex justify-between">
             <span className="font-cinzel text-gold-rune">Total</span>
             <span data-testid="checkout-total" className="font-cinzel text-gold-rune font-bold">
-              £{totalPrice.toFixed(2)}
+              ${totalPrice.toFixed(2)}
             </span>
           </div>
         </div>

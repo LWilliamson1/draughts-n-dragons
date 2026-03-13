@@ -488,7 +488,7 @@ export default function ShopPage() {
               <div className="border-t border-dungeon-purple pt-3 flex flex-col gap-2">
                 <div className="flex items-center justify-between">
                   <span className="font-cinzel text-gold-rune font-bold">
-                    £{product.price.toFixed(2)}
+                    ${product.price.toFixed(2)}
                   </span>
                   <span className={`font-im-fell text-xs italic ${stockColors[product.stock]}`}>
                     {product.stock}

@@ -46,11 +46,11 @@ export default function CartPage() {
               </div>
               <div className="text-right">
                 <div className="font-cinzel text-gold-rune font-bold">
-                  £{(item.price * item.quantity).toFixed(2)}
+                  ${(item.price * item.quantity).toFixed(2)}
                 </div>
                 {item.quantity > 1 && (
                   <div className="font-im-fell text-parchment-dark opacity-40 text-xs">
-                    {item.quantity} × £{item.price.toFixed(2)}
+                    {item.quantity} × ${item.price.toFixed(2)}
                   </div>
                 )}
               </div>
@@ -72,12 +72,12 @@ export default function CartPage() {
         <div className="border-t border-dungeon-purple pt-6 mb-8">
           <div className="flex justify-between items-center mb-2">
             <span className="font-im-fell text-parchment-dark opacity-60">Subtotal</span>
-            <span className="font-cinzel text-parchment">£{totalPrice.toFixed(2)}</span>
+            <span className="font-cinzel text-parchment">${totalPrice.toFixed(2)}</span>
           </div>
           <div className="flex justify-between items-center">
             <span className="font-cinzel text-gold-rune text-lg">Total</span>
             <span data-testid="cart-total" className="font-cinzel text-gold-rune text-xl font-bold">
-              £{totalPrice.toFixed(2)}
+              ${totalPrice.toFixed(2)}
             </span>
           </div>
         </div>
