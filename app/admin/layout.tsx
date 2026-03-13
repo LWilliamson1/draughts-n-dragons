@@ -1,6 +1,5 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { redirect } from "next/navigation";
 import AdminSidebar from "./_components/AdminSidebar";
 
 export const metadata = { title: "Admin — Draughts & Dragons" };
@@ -11,7 +10,10 @@ export default async function AdminLayout({
   children: React.ReactNode;
 }) {
   const session = await getServerSession(authOptions);
-  if (!session) redirect("/admin/login");
+
+  // No session means this must be the login page — proxy.ts guards all other /admin routes.
+  // Rendering without sidebar avoids an infinite redirect loop on /admin/login.
+  if (!session) return <>{children}</>;
 
   return (
     <div className="min-h-screen bg-dungeon-black flex">
