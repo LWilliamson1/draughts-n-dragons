@@ -12,3 +12,7 @@ out/
 !.env.example
 
 /app/generated/prisma
+
+# Playwright
+test-results/
+playwright-report/

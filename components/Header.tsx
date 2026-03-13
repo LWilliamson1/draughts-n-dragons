@@ -3,9 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import TieflingLogo from "./TieflingLogo";
+import { useCart } from "@/contexts/CartContext";
 
 export default function Header() {
   const pathname = usePathname();
+  const { totalItems } = useCart();
 
   const navLinks = [
     { href: "/", label: "The Tavern" },
@@ -80,8 +82,27 @@ export default function Header() {
               ))}
             </nav>
 
-            {/* CTA Button */}
-            <div className="hidden md:block">
+            {/* Cart + CTA */}
+            <div className="hidden md:flex items-center gap-4">
+              <Link
+                href="/cart"
+                aria-label="View cart"
+                className="relative text-parchment-dark hover:text-gold-rune transition-colors duration-200"
+              >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="9" cy="21" r="1" />
+                  <circle cx="20" cy="21" r="1" />
+                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                </svg>
+                {totalItems > 0 && (
+                  <span
+                    data-testid="cart-count"
+                    className="absolute -top-2 -right-2 bg-gold-rune text-dungeon-dark text-xs font-cinzel font-bold w-5 h-5 rounded-full flex items-center justify-center"
+                  >
+                    {totalItems}
+                  </span>
+                )}
+              </Link>
               <Link
                 href="/events"
                 className="font-cinzel text-sm tracking-wider uppercase px-5 py-2.5 rounded border border-gold-rune text-gold-rune
