@@ -10,7 +10,7 @@ import { useCart } from "@/contexts/CartContext";
 // ── Account button (signed-in / signed-out) ──────────────────────────────────
 
 function AccountMenu() {
-  const { data: session, status } = useSession();
+  const { data: session, status } = useSession() ?? { data: null, status: "loading" as const };
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
