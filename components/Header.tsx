@@ -3,18 +3,60 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import TieflingLogo from "./TieflingLogo";
 import { useCart } from "@/contexts/CartContext";
 
-// ── Account button (signed-in / signed-out) ──────────────────────────────────
+const NAV_LINKS = [
+  { href: "/", label: "The Tavern" },
+  { href: "/offerings", label: "Our Wares" },
+  { href: "/menu", label: "Menu" },
+  { href: "/shop", label: "Shop" },
+  { href: "/events", label: "Events" },
+];
 
-function AccountMenu() {
-  const { data: session, status } = useSession() ?? { data: null, status: "loading" as const };
+// ── Shared avatar UI ──────────────────────────────────────────────────────────
+
+function AvatarCircle({
+  image, name, email, size,
+  className = "",
+}: {
+  image?: string | null; name?: string | null; email?: string | null;
+  size: number; className?: string;
+}) {
+  const initials = name
+    ? name.split(" ").map((w: string) => w[0]).join("").slice(0, 2).toUpperCase()
+    : email?.[0]?.toUpperCase() ?? "?";
+
+  if (image) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img src={image} alt={name ?? "Avatar"} width={size} height={size}
+        className={`rounded-full ${className}`} style={{ width: size, height: size }} />
+    );
+  }
+  return (
+    <div
+      className={`rounded-full bg-dungeon-purple flex items-center justify-center font-cinzel text-gold-rune font-bold ${className}`}
+      style={{ width: size, height: size, fontSize: size * 0.35 }}
+    >
+      {initials}
+    </div>
+  );
+}
+
+// ── Desktop account dropdown ──────────────────────────────────────────────────
+
+function DesktopAccountMenu({
+  session,
+  status,
+}: {
+  session: ReturnType<typeof useSession>["data"];
+  status: ReturnType<typeof useSession>["status"];
+}) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
-  // Close on outside click
   useEffect(() => {
     function handle(e: MouseEvent) {
       if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
@@ -24,15 +66,15 @@ function AccountMenu() {
   }, []);
 
   if (status === "loading") {
-    return <div className="w-8 h-8 rounded-full bg-dungeon-purple/40 animate-pulse" />;
+    return <div className="hidden md:block w-8 h-8 rounded-full bg-dungeon-purple/40 animate-pulse" />;
   }
 
   if (!session) {
     return (
       <Link
         href="/auth/signin"
-        className="font-cinzel text-xs tracking-widest uppercase text-parchment-dark/70
-          hover:text-gold-rune transition-colors duration-200 hidden md:inline"
+        className="hidden md:inline font-cinzel text-xs tracking-widest uppercase
+          text-parchment-dark/70 hover:text-gold-rune transition-colors duration-200"
       >
         Sign In
       </Link>
@@ -40,9 +82,6 @@ function AccountMenu() {
   }
 
   const { name, email, image } = session.user;
-  const initials = name
-    ? name.split(" ").map((w: string) => w[0]).join("").slice(0, 2).toUpperCase()
-    : email?.[0]?.toUpperCase() ?? "?";
 
   return (
     <div ref={ref} className="relative hidden md:block">
@@ -52,17 +91,10 @@ function AccountMenu() {
         aria-label="Account menu"
         className="flex items-center gap-2 group"
       >
-        {image ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={image} alt={name ?? "Avatar"} width={32} height={32}
-            className="rounded-full border border-gold-rune/40 group-hover:border-gold-rune transition-colors" />
-        ) : (
-          <div className="w-8 h-8 rounded-full bg-dungeon-purple border border-gold-rune/30
-            group-hover:border-gold-rune/60 transition-colors
-            flex items-center justify-center font-cinzel text-gold-rune text-xs font-bold">
-            {initials}
-          </div>
-        )}
+        <AvatarCircle
+          image={image} name={name} email={email} size={32}
+          className={`border transition-colors ${open ? "border-gold-rune" : "border-gold-rune/40 group-hover:border-gold-rune"}`}
+        />
         <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"
           className={`text-parchment-dark/50 transition-transform duration-200 ${open ? "rotate-180" : ""}`}>
           <path d="M6 8L1 3h10z" />
@@ -70,11 +102,16 @@ function AccountMenu() {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-2 w-44 rounded-xl border border-dungeon-purple/40
+        <div className="absolute right-0 top-full mt-2 w-52 rounded-xl border border-dungeon-purple/40
           bg-dungeon-dark shadow-[0_8px_30px_rgba(0,0,0,0.5)] overflow-hidden z-50">
-          <div className="px-4 py-3 border-b border-dungeon-purple/20">
-            <p className="font-cinzel text-xs text-gold-rune/80 truncate">{name ?? "Adventurer"}</p>
-            <p className="font-im-fell text-[11px] text-parchment-dark/50 truncate mt-0.5">{email}</p>
+          {/* Profile summary */}
+          <div className="flex items-center gap-3 px-4 py-3 border-b border-dungeon-purple/20">
+            <AvatarCircle image={image} name={name} email={email} size={36}
+              className="border border-gold-rune/30 flex-shrink-0" />
+            <div className="min-w-0">
+              <p className="font-cinzel text-xs text-gold-rune/80 truncate">{name ?? "Adventurer"}</p>
+              <p className="font-im-fell text-[11px] text-parchment-dark/50 truncate">{email}</p>
+            </div>
           </div>
           <Link
             href="/account"
@@ -82,7 +119,7 @@ function AccountMenu() {
             className="flex items-center gap-2.5 px-4 py-3 font-cinzel text-xs tracking-wider uppercase
               text-parchment-dark/70 hover:text-parchment hover:bg-dungeon-purple/20 transition-colors"
           >
-            <span>⚔️</span> My Account
+            <span>⚔️</span> View Profile
           </Link>
           <button
             type="button"
@@ -98,19 +135,19 @@ function AccountMenu() {
   );
 }
 
-// ── Header ───────────────────────────────────────────────────────────────────
+// ── Header ────────────────────────────────────────────────────────────────────
 
 export default function Header() {
   const pathname = usePathname();
   const { totalItems } = useCart();
+  const { data: session, status } = useSession() ?? { data: null, status: "loading" as const };
+  const [mobileOpen, setMobileOpen] = useState(false);
 
-  const navLinks = [
-    { href: "/", label: "The Tavern" },
-    { href: "/offerings", label: "Our Wares" },
-    { href: "/menu", label: "Menu" },
-    { href: "/shop", label: "Shop" },
-    { href: "/events", label: "Events" },
-  ];
+  // Close mobile menu on navigation
+  useEffect(() => { setMobileOpen(false); }, [pathname]);
+
+  const isSignedIn = status !== "loading" && !!session;
+  const { name, email, image } = session?.user ?? {};
 
   return (
     <header className="relative z-50">
@@ -158,9 +195,9 @@ export default function Header() {
               </div>
             </Link>
 
-            {/* Navigation */}
+            {/* Desktop navigation */}
             <nav className="hidden md:flex items-center gap-8">
-              {navLinks.map((link) => (
+              {NAV_LINKS.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
@@ -180,7 +217,8 @@ export default function Header() {
 
             {/* Right-side actions */}
             <div className="flex items-center gap-3">
-              {/* Cart icon */}
+
+              {/* Cart */}
               <Link
                 href="/cart"
                 aria-label="View cart"
@@ -203,8 +241,8 @@ export default function Header() {
                 )}
               </Link>
 
-              {/* Account */}
-              <AccountMenu />
+              {/* Desktop account dropdown */}
+              <DesktopAccountMenu session={session} status={status} />
 
               {/* Book an Event — desktop only */}
               <Link
@@ -216,31 +254,104 @@ export default function Header() {
                 Book an Event
               </Link>
 
-              {/* Mobile menu icon */}
-              <button className="md:hidden text-parchment-dark hover:text-gold-rune transition-colors" aria-label="Menu">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <line x1="3" y1="6" x2="21" y2="6" />
-                  <line x1="3" y1="12" x2="21" y2="12" />
-                  <line x1="3" y1="18" x2="21" y2="18" />
-                </svg>
+              {/* Mobile toggle — avatar when signed in, hamburger/X when not */}
+              <button
+                className="md:hidden text-parchment-dark hover:text-gold-rune transition-colors"
+                aria-label={mobileOpen ? "Close menu" : "Open menu"}
+                onClick={() => setMobileOpen((v) => !v)}
+              >
+                {status === "loading" ? (
+                  <div className="w-8 h-8 rounded-full bg-dungeon-purple/40 animate-pulse" />
+                ) : isSignedIn ? (
+                  <AvatarCircle
+                    image={image} name={name} email={email} size={36}
+                    className={`border-2 transition-colors ${mobileOpen ? "border-gold-rune" : "border-gold-rune/40"}`}
+                  />
+                ) : mobileOpen ? (
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                  </svg>
+                ) : (
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <line x1="3" y1="6" x2="21" y2="6" />
+                    <line x1="3" y1="12" x2="21" y2="12" />
+                    <line x1="3" y1="18" x2="21" y2="18" />
+                  </svg>
+                )}
               </button>
             </div>
           </div>
 
-          {/* Mobile nav */}
-          <nav className="md:hidden flex gap-6 mt-4 pt-4 border-t border-dungeon-purple">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`font-cinzel text-xs tracking-widest uppercase ${
-                  pathname === link.href ? "text-gold-rune" : "text-parchment-dark"
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
+          {/* ── Mobile menu ──────────────────────────────────────── */}
+          {mobileOpen && (
+            <div className="md:hidden mt-4 pt-4 border-t border-dungeon-purple/60">
+
+              {/* Signed-in: profile card */}
+              {isSignedIn && (
+                <div className="mb-3 pb-3 border-b border-dungeon-purple/30">
+                  <div className="flex items-center gap-3 px-1 mb-3">
+                    <AvatarCircle image={image} name={name} email={email} size={44}
+                      className="border border-gold-rune/40 flex-shrink-0" />
+                    <div className="min-w-0">
+                      <p className="font-cinzel text-sm text-parchment font-bold truncate">
+                        {name ?? "Adventurer"}
+                      </p>
+                      <p className="font-im-fell italic text-parchment-dark/50 text-xs truncate">{email}</p>
+                    </div>
+                  </div>
+                  <Link
+                    href="/account"
+                    onClick={() => setMobileOpen(false)}
+                    className="flex items-center gap-2 px-2 py-2.5 rounded-lg font-cinzel text-xs tracking-wider uppercase
+                      text-parchment-dark/80 hover:text-parchment hover:bg-dungeon-purple/20 transition-colors"
+                  >
+                    <span>⚔️</span> View Profile
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => { setMobileOpen(false); signOut({ callbackUrl: "/" }); }}
+                    className="w-full flex items-center gap-2 px-2 py-2.5 rounded-lg font-cinzel text-xs tracking-wider uppercase
+                      text-parchment-dark/50 hover:text-dragon-crimson hover:bg-dungeon-purple/20 transition-colors"
+                  >
+                    <span>🚪</span> Sign Out
+                  </button>
+                </div>
+              )}
+
+              {/* Signed-out: sign in button */}
+              {!isSignedIn && (
+                <div className="mb-3 pb-3 border-b border-dungeon-purple/30">
+                  <Link
+                    href="/auth/signin"
+                    onClick={() => setMobileOpen(false)}
+                    className="flex items-center justify-center font-cinzel text-xs tracking-widest uppercase
+                      py-2.5 rounded-lg bg-gold-rune text-dungeon-dark font-bold hover:bg-gold-bright transition-colors"
+                  >
+                    Sign In / Register
+                  </Link>
+                </div>
+              )}
+
+              {/* Nav links */}
+              <nav className="flex flex-col gap-0.5">
+                {NAV_LINKS.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setMobileOpen(false)}
+                    className={`font-cinzel text-xs tracking-widest uppercase px-2 py-2.5 rounded-lg transition-colors ${
+                      pathname === link.href
+                        ? "text-gold-rune bg-dungeon-purple/20"
+                        : "text-parchment-dark hover:text-parchment hover:bg-dungeon-purple/10"
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </nav>
+            </div>
+          )}
         </div>
       </div>
 
