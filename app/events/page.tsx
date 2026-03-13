@@ -413,13 +413,25 @@ export default async function EventsPage() {
                           {spotsLabel(event.capacity, event.signups)}
                         </div>
                       )}
-                      <button
-                        className="mt-1 font-cinzel text-xs tracking-wider uppercase px-3 py-1.5 rounded
-                          border border-arcane-violet text-arcane-violet
-                          hover:bg-arcane-violet hover:text-parchment transition-all duration-300"
-                      >
-                        RSVP
-                      </button>
+                      {(() => {
+                        const label = spotsLabel(event.capacity, event.signups);
+                        const isFull = label === "FULL";
+                        return isFull ? (
+                          <span className="mt-1 font-cinzel text-xs tracking-wider uppercase px-3 py-1.5 rounded
+                            border border-dungeon-purple text-parchment-dark opacity-40 cursor-not-allowed">
+                            FULL
+                          </span>
+                        ) : (
+                          <Link
+                            href={`/events/${event.id}/rsvp`}
+                            className="mt-1 font-cinzel text-xs tracking-wider uppercase px-3 py-1.5 rounded
+                              border border-arcane-violet text-arcane-violet
+                              hover:bg-arcane-violet hover:text-parchment transition-all duration-300"
+                          >
+                            RSVP
+                          </Link>
+                        );
+                      })()}
                     </div>
                   </div>
                 ))}
