@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Offerings — Draughts & Dragons</title>
+  <meta name="description" content="Explore our offerings: premium miniatures & terrain, paints, board games, TCG singles, event space hire, and our legendary tavern bar."/>
+  <link rel="stylesheet" href="css/styles.css"/>
+  <link rel="icon" href="assets/d20.svg" type="image/svg+xml"/>
+</head>
+<body>
+  <div class="page-bg"></div>
+
+  <!-- ========== NAVBAR ========== -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <img src="assets/logo.svg" alt="Draughts & Dragons Logo" class="nav-logo"/>
+        <div class="nav-title">
+          <span class="nav-title-main">Draughts &amp; Dragons</span>
+          <span class="nav-title-sub">Tavern &bull; TTRPG &bull; Retail</span>
+        </div>
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="offerings.html" class="active">Offerings</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="events.html" class="nav-cta">Reserve a Table</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ========== PAGE HERO ========== -->
+  <div class="page-hero">
+    <div class="page-hero-icon">⚔️🎲</div>
+    <h1 class="page-hero-title">Our Offerings</h1>
+    <p class="page-hero-desc">
+      From the bar to the game table — everything an adventurer could desire awaits within these walls.
+    </p>
+  </div>
+
+  <!-- ========== QUICK NAV ========== -->
+  <div class="section" style="padding-top:0; padding-bottom:0;">
+    <div class="section-inner">
+      <div style="display:flex; flex-wrap:wrap; gap:var(--space-sm); justify-content:center; margin-bottom:var(--space-xl);">
+        <a href="#bar" class="btn btn-outline" style="font-size:0.7rem; padding:0.5rem 1rem;">🍺 The Bar</a>
+        <a href="#events" class="btn btn-outline" style="font-size:0.7rem; padding:0.5rem 1rem;">🏰 Event Space</a>
+        <a href="#minis" class="btn btn-outline" style="font-size:0.7rem; padding:0.5rem 1rem;">⚔️ Minis &amp; Terrain</a>
+        <a href="#paints" class="btn btn-outline" style="font-size:0.7rem; padding:0.5rem 1rem;">🎨 Paints</a>
+        <a href="#board-games" class="btn btn-outline" style="font-size:0.7rem; padding:0.5rem 1rem;">🎲 Board Games</a>
+        <a href="#tcg" class="btn btn-outline" style="font-size:0.7rem; padding:0.5rem 1rem;">🃏 TCG</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== THE BAR ========== -->
+  <section class="section" id="bar">
+    <div class="section-inner">
+      <div class="section-header fade-in">
+        <p class="section-eyebrow">The Tavern</p>
+        <h2 class="section-title">🍺 The Bar</h2>
+        <p class="section-desc">
+          Fine ales, infernal cocktails, and potions of all varieties. Every drink tells a story.
+        </p>
+      </div>
+
+      <div class="grid-2" style="align-items:start;">
+        <!-- Drinks menu highlights -->
+        <div class="card fade-in">
+          <h3 class="card-title" style="margin-bottom:var(--space-md);">⚗️ Signature Concoctions</h3>
+          <div style="display:flex; flex-direction:column; gap:var(--space-md);">
+            <div style="border-bottom:1px solid rgba(212,175,55,0.1); padding-bottom:var(--space-md);">
+              <div style="display:flex; justify-content:space-between; align-items:baseline;">
+                <span style="font-family:var(--font-heading); color:var(--color-parchment); font-size:0.95rem;">Tiefling's Fire</span>
+                <span style="color:var(--color-gold); font-family:var(--font-heading); font-size:0.85rem;">$14</span>
+              </div>
+              <p class="card-text" style="font-size:0.85rem;">Spiced rum, dragon fruit, chilli syrup, lime, smoked rim. Ignite your courage.</p>
+            </div>
+            <div style="border-bottom:1px solid rgba(212,175,55,0.1); padding-bottom:var(--space-md);">
+              <div style="display:flex; justify-content:space-between; align-items:baseline;">
+                <span style="font-family:var(--font-heading); color:var(--color-parchment); font-size:0.95rem;">Potion of Healing</span>
+                <span style="color:var(--color-gold); font-family:var(--font-heading); font-size:0.85rem;">$12</span>
+              </div>
+              <p class="card-text" style="font-size:0.85rem;">Elderflower gin, cucumber, rose, sparkling water. Restores 2d8 HP.</p>
+            </div>
+            <div style="border-bottom:1px solid rgba(212,175,55,0.1); padding-bottom:var(--space-md);">
+              <div style="display:flex; justify-content:space-between; align-items:baseline;">
+                <span style="font-family:var(--font-heading); color:var(--color-parchment); font-size:0.95rem;">The Arcane Brew</span>
+                <span style="color:var(--color-gold); font-family:var(--font-heading); font-size:0.85rem;">$11</span>
+              </div>
+              <p class="card-text" style="font-size:0.85rem;">Butterfly pea flower lemonade — colour changes from indigo to violet as you sip.</p>
+            </div>
+            <div>
+              <div style="display:flex; justify-content:space-between; align-items:baseline;">
+                <span style="font-family:var(--font-heading); color:var(--color-parchment); font-size:0.95rem;">The Dungeon Delve (dark ale)</span>
+                <span style="color:var(--color-gold); font-family:var(--font-heading); font-size:0.85rem;">$9</span>
+              </div>
+              <p class="card-text" style="font-size:0.85rem;">Our house stout — deep, dark, and mysteriously good. Brewed in-house seasonally.</p>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:var(--space-lg);">
+          <div class="card fade-in">
+            <h3 class="card-title">🍻 Draft & Bottle Selection</h3>
+            <p class="card-text">
+              Rotating selection of 8 craft ales on tap, 20+ bottled beers, extensive wine list,
+              and non-alcoholic "potions" for all party members. Ask our bar staff about the
+              <em style="color:var(--color-gold);">Adventurer's Flight</em> — 4 tasters for $18.
+            </p>
+          </div>
+          <div class="card fade-in">
+            <h3 class="card-title">🥘 Bar Snacks & Provisions</h3>
+            <p class="card-text">
+              Fuel your quest with our tavern-style bites: charcuterie boards, soft pretzels,
+              spiced nuts, flatbreads, and seasonal specials. Full bar food menu available
+              Friday through Sunday.
+            </p>
+          </div>
+          <div class="card fade-in" style="border-color:rgba(212,175,55,0.4); background:rgba(212,175,55,0.04);">
+            <h3 class="card-title">📜 Bring Your Game</h3>
+            <p class="card-text">
+              Playing a game? Grab a table and order at the bar. Our staff will bring your
+              drinks to you so you never have to pause your session. Game table reservations
+              available for groups of 4+.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="ornament-divider section-inner" style="max-width:1200px; margin:0 auto; padding:0 var(--space-lg);">
+    <span>🏰</span>
+  </div>
+
+  <!-- ========== EVENT SPACE ========== -->
+  <section class="section" id="events" style="background:rgba(26,14,53,0.3);">
+    <div class="section-inner">
+      <div class="section-header fade-in">
+        <p class="section-eyebrow">Private Hire</p>
+        <h2 class="section-title">🏰 The Event Sanctum</h2>
+        <p class="section-desc">
+          A dedicated adventuring hall for private parties, campaigns, tournaments, and corporate events.
+        </p>
+      </div>
+
+      <div class="grid-3">
+        <div class="offering-card fade-in">
+          <div class="offering-image-placeholder bg-purple">
+            🎭
+          </div>
+          <div class="offering-body">
+            <h3 class="offering-title">Campaign Room</h3>
+            <p class="offering-desc">
+              Intimate space for 6–12 adventurers. Dedicated DM screen, mood lighting,
+              ambient sound system, and private bar tab setup.
+            </p>
+            <div class="offering-tags">
+              <span class="offering-tag">Up to 12</span>
+              <span class="offering-tag">Full AV</span>
+              <span class="offering-tag">Private Bar</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="offering-card fade-in">
+          <div class="offering-image-placeholder bg-dark">
+            🏟️
+          </div>
+          <div class="offering-body">
+            <h3 class="offering-title">Tournament Hall</h3>
+            <p class="offering-desc">
+              Full venue hire for up to 40 players. Ideal for Magic: The Gathering events,
+              board game tournaments, TTRPG conventions, and themed parties.
+            </p>
+            <div class="offering-tags">
+              <span class="offering-tag">Up to 40</span>
+              <span class="offering-tag">Tables Provided</span>
+              <span class="offering-tag">Projector</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="offering-card fade-in">
+          <div class="offering-image-placeholder bg-red">
+            🎂
+          </div>
+          <div class="offering-body">
+            <h3 class="offering-title">Party Quest</h3>
+            <p class="offering-desc">
+              Birthday parties, celebrations, and group adventures. Custom decorations,
+              catered food options, and a dedicated host to guide your evening.
+            </p>
+            <div class="offering-tags">
+              <span class="offering-tag">Custom Themes</span>
+              <span class="offering-tag">Catering</span>
+              <span class="offering-tag">Dedicated Host</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card fade-in mt-lg" style="background:rgba(212,175,55,0.04); border-color:rgba(212,175,55,0.3);">
+        <div style="display:grid; grid-template-columns:1fr auto; align-items:center; gap:var(--space-lg); flex-wrap:wrap;">
+          <div>
+            <h3 class="card-title">Ready to book your party's adventure?</h3>
+            <p class="card-text">
+              Contact our event coordinator Margrave at <em style="color:var(--color-gold);">events@draughts-n-dragons.com</em>
+              or call us to discuss availability. We offer bespoke packages for all group sizes and budgets.
+            </p>
+          </div>
+          <a href="events.html#reserve" class="btn btn-primary" style="white-space:nowrap; flex-shrink:0;">
+            Book Now ⚔
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="ornament-divider section-inner" style="max-width:1200px; margin:0 auto; padding:0 var(--space-lg);">
+    <span>⚔️</span>
+  </div>
+
+  <!-- ========== MINIS & TERRAIN ========== -->
+  <section class="section" id="minis">
+    <div class="section-inner">
+      <div class="section-header fade-in">
+        <p class="section-eyebrow">High-End Hobby</p>
+        <h2 class="section-title">⚔️ Miniatures &amp; Terrain</h2>
+        <p class="section-desc">
+          Museum-quality pieces to bring your tabletop world to life. We stock only the finest.
+        </p>
+      </div>
+
+      <div class="grid-4">
+        <div class="offering-card fade-in">
+          <div class="offering-image-placeholder bg-purple" style="height:140px;">🐉</div>
+          <div class="offering-body">
+            <h3 class="offering-title">Resin Premium Minis</h3>
+            <p class="offering-desc">Forge World, Darklands, and boutique resin casts. Collector quality.</p>
+            <div class="offering-tags">
+              <span class="offering-tag">Resin</span>
+              <span class="offering-tag">Display Grade</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="offering-card fade-in">
+          <div class="offering-image-placeholder bg-dark" style="height:140px;">🧝</div>
+          <div class="offering-body">
+            <h3 class="offering-title">Plastic Starter Sets</h3>
+            <p class="offering-desc">Warhammer, D&amp;D Icons of the Realms, and beginner-friendly ranges.</p>
+            <div class="offering-tags">
+              <span class="offering-tag">Beginner</span>
+              <span class="offering-tag">Value Sets</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="offering-card fade-in">
+          <div class="offering-image-placeholder bg-gold" style="height:140px;">🗺️</div>
+          <div class="offering-body">
+            <h3 class="offering-title">Modular Terrain</h3>
+            <p class="offering-desc">Dragonlock dungeon tiles, castles, forests, and dungeon scatter pieces.</p>
+            <div class="offering-tags">
+              <span class="offering-tag">Modular</span>
+              <span class="offering-tag">Pre-painted</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="offering-card fade-in">
+          <div class="offering-image-placeholder bg-red" style="height:140px;">🏰</div>
+          <div class="offering-body">
+            <h3 class="offering-title">Scenic Bases &amp; Basing</h3>
+            <p class="offering-desc">Textured base inserts, tufts, sand, and decorative elements for the perfect finish.</p>
+            <div class="offering-tags">
+              <span class="offering-tag">Basing</span>
+              <span class="offering-tag">Scenic</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card fade-in mt-lg">
+        <p style="font-family:var(--font-heading); font-size:0.8rem; color:var(--color-tiefling-light); letter-spacing:0.1em; margin-bottom:var(--space-sm);">✦ PRO TIP FROM THE BARKEEP</p>
+        <p class="card-text">
+          Our staff are experienced painters and TTRPG veterans. Ask about our
+          <strong style="color:var(--color-gold);">commission painting service</strong> — we'll paint your army
+          so you can spend more time rolling dice and less time at the hobby desk.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="ornament-divider section-inner" style="max-width:1200px; margin:0 auto; padding:0 var(--space-lg);">
+    <span>🎨</span>
+  </div>
+
+  <!-- ========== PAINTS ========== -->
+  <section class="section" id="paints" style="background:rgba(26,14,53,0.3);">
+    <div class="section-inner">
+      <div class="section-header fade-in">
+        <p class="section-eyebrow">Hobby Supplies</p>
+        <h2 class="section-title">🎨 Paints &amp; Tools</h2>
+        <p class="section-desc">
+          A comprehensive range of paints, brushes, and hobby tools for every skill level.
+        </p>
+      </div>
+
+      <div class="grid-3">
+        <div class="card fade-in">
+          <span class="card-icon">🖌️</span>
+          <h3 class="card-title">Citadel / Games Workshop</h3>
+          <p class="card-text">
+            Full range including Base, Layer, Shade, Dry, Technical, Contrast, and Air paints.
+            Regularly restocked. Loyalty discounts for card holders.
+          </p>
+          <div class="offering-tags mt-md">
+            <span class="offering-tag">200+ Colours</span>
+            <span class="offering-tag">Contrast Range</span>
+            <span class="offering-tag">Technical</span>
+          </div>
+        </div>
+
+        <div class="card fade-in">
+          <span class="card-icon">🎭</span>
+          <h3 class="card-title">Vallejo &amp; Scale75</h3>
+          <p class="card-text">
+            Professional-grade dropper-bottle paints favoured by competition painters. Model Color,
+            Game Color, and Scale75 Scalecolor ranges in stock.
+          </p>
+          <div class="offering-tags mt-md">
+            <span class="offering-tag">Dropper Bottles</span>
+            <span class="offering-tag">Competition Grade</span>
+          </div>
+        </div>
+
+        <div class="card fade-in">
+          <span class="card-icon">🔧</span>
+          <h3 class="card-title">Tools &amp; Accessories</h3>
+          <p class="card-text">
+            Precision brushes (Raphael, Da Vinci, Games Workshop), hobby knives, clippers,
+            files, wet palettes, spray primers, and airbrush supplies.
+          </p>
+          <div class="offering-tags mt-md">
+            <span class="offering-tag">Brushes</span>
+            <span class="offering-tag">Primers</span>
+            <span class="offering-tag">Airbrush</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="ornament-divider section-inner" style="max-width:1200px; margin:0 auto; padding:0 var(--space-lg);">
+    <span>🎲</span>
+  </div>
+
+  <!-- ========== BOARD GAMES ========== -->
+  <section class="section" id="board-games">
+    <div class="section-inner">
+      <div class="section-header fade-in">
+        <p class="section-eyebrow">The Vault</p>
+        <h2 class="section-title">🎲 Board Games</h2>
+        <p class="section-desc">
+          A curated selection of strategic, cooperative, and thematic tabletop experiences.
+        </p>
+      </div>
+
+      <div class="grid-4">
+        <div class="card fade-in">
+          <span class="card-icon">👑</span>
+          <h3 class="card-title">Strategy Epics</h3>
+          <p class="card-text">Twilight Imperium, Gloomhaven, War of the Ring, Root, and more grand-strategy titles.</p>
+        </div>
+        <div class="card fade-in">
+          <span class="card-icon">🤝</span>
+          <h3 class="card-title">Co-operative</h3>
+          <p class="card-text">Spirit Island, Pandemic Legacy, Arkham Horror, Sleeping Gods — adventure together.</p>
+        </div>
+        <div class="card fade-in">
+          <span class="card-icon">⚡</span>
+          <h3 class="card-title">Gateway Games</h3>
+          <p class="card-text">Catan, Carcassonne, Ticket to Ride, and Wingspan. Perfect for new adventurers.</p>
+        </div>
+        <div class="card fade-in">
+          <span class="card-icon">📖</span>
+          <h3 class="card-title">TTRPG Rulebooks</h3>
+          <p class="card-text">D&amp;D 5e, Pathfinder, Call of Cthulhu, Blades in the Dark, and indie RPG systems.</p>
+        </div>
+      </div>
+
+      <div class="card fade-in mt-lg" style="border-color:rgba(212,175,55,0.3);">
+        <p style="font-family:var(--font-heading); font-size:0.8rem; color:var(--color-gold); letter-spacing:0.1em; margin-bottom:var(--space-sm);">📚 LIBRARY ACCESS</p>
+        <p class="card-text">
+          We maintain a <strong style="color:var(--color-parchment);">demo library</strong> of 100+ games available to play in-venue with any drink purchase.
+          Ask our team at the counter to check out a title.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="ornament-divider section-inner" style="max-width:1200px; margin:0 auto; padding:0 var(--space-lg);">
+    <span>🃏</span>
+  </div>
+
+  <!-- ========== TCG ========== -->
+  <section class="section" id="tcg" style="background:rgba(26,14,53,0.3);">
+    <div class="section-inner">
+      <div class="section-header fade-in">
+        <p class="section-eyebrow">Trading Card Games</p>
+        <h2 class="section-title">🃏 TCG Corner</h2>
+        <p class="section-desc">
+          Singles, sealed product, accessories, and regular sanctioned events for all major TCGs.
+        </p>
+      </div>
+
+      <div class="grid-3">
+        <div class="offering-card fade-in">
+          <div class="offering-image-placeholder bg-blue" style="font-size:3rem;">✦</div>
+          <div class="offering-body">
+            <h3 class="offering-title">Magic: The Gathering</h3>
+            <p class="offering-desc">
+              Singles from all sets, booster boxes, draft boosters, and Commander precons.
+              FNM every Friday. WPN Premium store.
+            </p>
+            <div class="offering-tags">
+              <span class="offering-tag">Singles</span>
+              <span class="offering-tag">Sealed</span>
+              <span class="offering-tag">Commander</span>
+              <span class="offering-tag">FNM Events</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="offering-card fade-in">
+          <div class="offering-image-placeholder bg-purple" style="font-size:3rem;">⚡</div>
+          <div class="offering-body">
+            <h3 class="offering-title">Pokémon TCG</h3>
+            <p class="offering-desc">
+              Booster packs, Elite Trainer Boxes, promo cards, and a growing singles binder.
+              Monthly tournament events. Graded card display case on-site.
+            </p>
+            <div class="offering-tags">
+              <span class="offering-tag">Booster Packs</span>
+              <span class="offering-tag">Singles</span>
+              <span class="offering-tag">Events</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="offering-card fade-in">
+          <div class="offering-image-placeholder bg-dark" style="font-size:3rem;">🐲</div>
+          <div class="offering-body">
+            <h3 class="offering-title">Other TCGs</h3>
+            <p class="offering-desc">
+              Flesh and Blood, One Piece TCG, Lorcana, and Digimon. Ask our team about
+              stocking your preferred TCG.
+            </p>
+            <div class="offering-tags">
+              <span class="offering-tag">Flesh &amp; Blood</span>
+              <span class="offering-tag">Lorcana</span>
+              <span class="offering-tag">One Piece</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2 mt-lg">
+        <div class="card fade-in">
+          <span class="card-icon">💰</span>
+          <h3 class="card-title">We Buy &amp; Trade</h3>
+          <p class="card-text">
+            Bring in your unwanted singles and collections. We offer fair cash prices or
+            enhanced store credit. Same-day evaluation for most TCG collections.
+          </p>
+        </div>
+        <div class="card fade-in">
+          <span class="card-icon">🛡️</span>
+          <h3 class="card-title">Sleeves, Binders &amp; Accessories</h3>
+          <p class="card-text">
+            Full range of Dragon Shield, Ultra Pro, and KMC sleeves. Deck boxes, playmats,
+            binders, and storage solutions. Custom playmats available to order.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div>
+          <img src="assets/logo.svg" alt="Logo" class="footer-brand-logo"/>
+          <p class="footer-brand-name">Draughts &amp; Dragons</p>
+          <p class="footer-brand-desc">
+            Where the ale flows freely, the dice roll true, and every adventurer finds their story.
+          </p>
+          <div class="footer-social">
+            <a href="#" class="social-btn" title="Instagram">📷</a>
+            <a href="#" class="social-btn" title="Facebook">🌐</a>
+            <a href="#" class="social-btn" title="Discord">💬</a>
+            <a href="#" class="social-btn" title="Twitter/X">✦</a>
+          </div>
+        </div>
+        <div>
+          <h4 class="footer-heading">Navigate</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="offerings.html">Offerings</a></li>
+            <li><a href="events.html">Event Calendar</a></li>
+            <li><a href="events.html#reserve">Reserve a Table</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="footer-heading">Offerings</h4>
+          <ul class="footer-links">
+            <li><a href="#bar">The Bar</a></li>
+            <li><a href="#minis">Minis &amp; Terrain</a></li>
+            <li><a href="#paints">Paints</a></li>
+            <li><a href="#board-games">Board Games</a></li>
+            <li><a href="#tcg">TCG Cards</a></li>
+            <li><a href="#events">Event Space</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="footer-heading">Visit Us</h4>
+          <ul class="footer-links" style="gap:0.75rem;">
+            <li style="color:var(--color-muted); font-size:0.9rem;">123 Arcane Avenue<br/>Dungeon Quarter</li>
+            <li style="color:var(--color-muted); font-size:0.9rem;">Tue–Thu: 3pm–11pm</li>
+            <li style="color:var(--color-muted); font-size:0.9rem;">Fri–Sat: 12pm–1am</li>
+            <li style="color:var(--color-muted); font-size:0.9rem;">Sunday: 12pm–9pm</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="footer-copy">&copy; 2026 Draughts &amp; Dragons. All rights reserved. May your dice always roll high.</p>
+        <span class="footer-d20">⬡</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Events — Draughts & Dragons</title>
+  <meta name="description" content="Events calendar for Draughts & Dragons — Friday Night Magic, miniature painting tutorials, pint nights, TTRPG campaigns, and more."/>
+  <link rel="stylesheet" href="css/styles.css"/>
+  <link rel="icon" href="assets/d20.svg" type="image/svg+xml"/>
+  <style>
+    /* ---- Calendar nav controls ---- */
+    .cal-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-lg);
+    }
+    .cal-month-title {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      color: var(--color-gold);
+    }
+    .cal-nav-btn {
+      background: none;
+      border: 1px solid var(--color-gold-dark);
+      color: var(--color-gold);
+      font-size: 1.2rem;
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+    }
+    .cal-nav-btn:hover {
+      background: rgba(212,175,55,0.1);
+      border-color: var(--color-gold);
+    }
+
+    /* ---- Event legend ---- */
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-lg);
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: var(--font-heading);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+    }
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+    }
+
+    /* ---- Reservation form ---- */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      margin-bottom: var(--space-md);
+    }
+    .form-label {
+      font-family: var(--font-heading);
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--color-tiefling-light);
+    }
+    .form-input,
+    .form-select,
+    .form-textarea {
+      background: rgba(10, 6, 20, 0.8);
+      border: 1px solid var(--color-card-border);
+      border-radius: var(--radius-sm);
+      color: var(--color-parchment);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      padding: 0.65rem 0.85rem;
+      width: 100%;
+      transition: border-color 0.3s;
+      outline: none;
+    }
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      border-color: var(--color-gold-dark);
+      box-shadow: 0 0 0 2px rgba(212,175,55,0.15);
+    }
+    .form-select option { background: var(--color-deep); }
+    .form-textarea { min-height: 100px; resize: vertical; }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-md);
+    }
+    @media (max-width: 560px) { .form-row { grid-template-columns: 1fr; } }
+
+    /* ---- Event detail modal ---- */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-md);
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--color-cavern);
+      border: 1px solid var(--color-card-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl);
+      max-width: 480px;
+      width: 100%;
+      position: relative;
+      box-shadow: var(--shadow-purple), var(--shadow-gold);
+    }
+    .modal-close {
+      position: absolute;
+      top: var(--space-md);
+      right: var(--space-md);
+      background: none;
+      border: none;
+      color: var(--color-muted);
+      font-size: 1.4rem;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .modal-close:hover { color: var(--color-gold); }
+    .modal-title {
+      font-family: var(--font-heading);
+      font-size: 1.3rem;
+      color: var(--color-gold);
+      margin-bottom: var(--space-sm);
+    }
+    .modal-meta {
+      font-size: 0.85rem;
+      color: var(--color-tiefling-light);
+      font-style: italic;
+      margin-bottom: var(--space-md);
+    }
+    .modal-desc { color: var(--color-muted); line-height: 1.7; }
+  </style>
+</head>
+<body>
+  <div class="page-bg"></div>
+
+  <!-- ========== NAVBAR ========== -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <img src="assets/logo.svg" alt="Draughts & Dragons Logo" class="nav-logo"/>
+        <div class="nav-title">
+          <span class="nav-title-main">Draughts &amp; Dragons</span>
+          <span class="nav-title-sub">Tavern &bull; TTRPG &bull; Retail</span>
+        </div>
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="offerings.html">Offerings</a></li>
+        <li><a href="events.html" class="active">Events</a></li>
+        <li><a href="#reserve" class="nav-cta">Reserve a Table</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ========== PAGE HERO ========== -->
+  <div class="page-hero">
+    <div class="page-hero-icon">📅⚔️</div>
+    <h1 class="page-hero-title">Event Calendar</h1>
+    <p class="page-hero-desc">
+      From Friday Night Magic to painting tutorials and legendary pint nights —
+      there is always a quest on the horizon.
+    </p>
+  </div>
+
+  <!-- ========== RECURRING EVENTS OVERVIEW ========== -->
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-header fade-in">
+        <p class="section-eyebrow">Regular Quests</p>
+        <h2 class="section-title">Weekly &amp; Monthly Events</h2>
+        <p class="section-desc">Our recurring adventures — set these in your spell book.</p>
+      </div>
+
+      <div class="grid-3">
+        <div class="card fade-in" style="border-color:rgba(59,130,246,0.4);">
+          <span class="card-icon" style="filter:drop-shadow(0 0 8px rgba(59,130,246,0.5));">🃏</span>
+          <h3 class="card-title" style="color:#93c5fd;">Friday Night Magic</h3>
+          <p class="card-text">
+            Every Friday from 6pm. Draft, Standard, Commander, and casual formats.
+            Entry: $15 draft / $5 casual. Prizes every round for top finishers.
+            We're a WPN Premium store — sanctioned events every week.
+          </p>
+          <div class="mt-md" style="display:flex; flex-wrap:wrap; gap:var(--space-sm);">
+            <span class="badge" style="background:rgba(59,130,246,0.15); color:#93c5fd; border-color:rgba(59,130,246,0.3);">Every Friday</span>
+            <span class="badge" style="background:rgba(59,130,246,0.15); color:#93c5fd; border-color:rgba(59,130,246,0.3);">6pm Start</span>
+          </div>
+        </div>
+
+        <div class="card fade-in" style="border-color:rgba(34,197,94,0.4);">
+          <span class="card-icon" style="filter:drop-shadow(0 0 8px rgba(34,197,94,0.5));">🎨</span>
+          <h3 class="card-title" style="color:#86efac;">Painting Tutorials</h3>
+          <p class="card-text">
+            Every 2nd &amp; 4th Saturday at 2pm. Sessions run 2–3 hours.
+            Beginner through advanced. Materials provided for novices.
+            Bring your own minis or pick one up in-store.
+          </p>
+          <div class="mt-md" style="display:flex; flex-wrap:wrap; gap:var(--space-sm);">
+            <span class="badge" style="background:rgba(34,197,94,0.15); color:#86efac; border-color:rgba(34,197,94,0.3);">Bi-weekly Sat</span>
+            <span class="badge" style="background:rgba(34,197,94,0.15); color:#86efac; border-color:rgba(34,197,94,0.3);">2pm Start</span>
+          </div>
+        </div>
+
+        <div class="card fade-in" style="border-color:rgba(212,175,55,0.4);">
+          <span class="card-icon">🍻</span>
+          <h3 class="card-title" style="color:var(--color-gold);">Pint Night</h3>
+          <p class="card-text">
+            Every Thursday at 7pm. New seasonal ale revealed each month.
+            Themed trivia, casual gaming, and drink specials.
+            Tables available — no booking needed.
+          </p>
+          <div class="mt-md" style="display:flex; flex-wrap:wrap; gap:var(--space-sm);">
+            <span class="badge">Every Thursday</span>
+            <span class="badge">7pm Start</span>
+          </div>
+        </div>
+
+        <div class="card fade-in" style="border-color:rgba(139,61,139,0.4);">
+          <span class="card-icon">🐉</span>
+          <h3 class="card-title" style="color:var(--color-tiefling-light);">Campaign Night</h3>
+          <p class="card-text">
+            Open TTRPG gaming every Wednesday from 6pm. Find a group, join an existing campaign,
+            or run your own. All systems welcome — D&amp;D, Pathfinder, Call of Cthulhu, and more.
+          </p>
+          <div class="mt-md" style="display:flex; flex-wrap:wrap; gap:var(--space-sm);">
+            <span class="badge" style="background:rgba(139,61,139,0.15); color:var(--color-tiefling-light); border-color:rgba(139,61,139,0.3);">Every Wednesday</span>
+            <span class="badge" style="background:rgba(139,61,139,0.15); color:var(--color-tiefling-light); border-color:rgba(139,61,139,0.3);">6pm Start</span>
+          </div>
+        </div>
+
+        <div class="card fade-in" style="border-color:rgba(231,76,60,0.4);">
+          <span class="card-icon">🏆</span>
+          <h3 class="card-title" style="color:#f87171;">Monthly Tournament</h3>
+          <p class="card-text">
+            First Sunday of each month — grand tournament event rotating between TCG systems,
+            board games, and TTRPG one-shots. Prizes, glory, and store credit await.
+          </p>
+          <div class="mt-md" style="display:flex; flex-wrap:wrap; gap:var(--space-sm);">
+            <span class="badge" style="background:rgba(231,76,60,0.15); color:#f87171; border-color:rgba(231,76,60,0.3);">Monthly</span>
+            <span class="badge" style="background:rgba(231,76,60,0.15); color:#f87171; border-color:rgba(231,76,60,0.3);">1st Sunday</span>
+          </div>
+        </div>
+
+        <div class="card fade-in">
+          <span class="card-icon">🌟</span>
+          <h3 class="card-title">Special Events</h3>
+          <p class="card-text">
+            Launch weekends, charity drives, cosplay nights, and seasonal celebrations.
+            Check the calendar below and sign up for our newsletter to never miss an announcement.
+          </p>
+          <div class="mt-md">
+            <span class="badge">Seasonal</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== CALENDAR ========== -->
+  <section class="section" style="background:rgba(26,14,53,0.4);">
+    <div class="section-inner">
+      <div class="section-header fade-in">
+        <p class="section-eyebrow">Scry the Future</p>
+        <h2 class="section-title">Monthly Calendar</h2>
+      </div>
+
+      <!-- Legend -->
+      <div class="legend fade-in">
+        <div class="legend-item">
+          <div class="legend-dot" style="background:rgba(59,130,246,0.6);"></div>
+          <span>Friday Night Magic</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:rgba(34,197,94,0.5);"></div>
+          <span>Painting Tutorial</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:rgba(212,175,55,0.5);"></div>
+          <span>Pint Night</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:rgba(139,61,139,0.55);"></div>
+          <span>Campaign Night</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:rgba(231,76,60,0.5);"></div>
+          <span>Tournament / Special</span>
+        </div>
+      </div>
+
+      <!-- Calendar controls -->
+      <div class="cal-controls fade-in">
+        <button class="cal-nav-btn" id="prevMonth" aria-label="Previous month">&#8249;</button>
+        <h3 class="cal-month-title" id="calMonthTitle">March 2026</h3>
+        <button class="cal-nav-btn" id="nextMonth" aria-label="Next month">&#8250;</button>
+      </div>
+
+      <!-- Calendar grid (rendered by JS) -->
+      <div class="calendar-grid fade-in" id="calendarGrid">
+        <div class="calendar-header">
+          <div class="calendar-day-header">Sun</div>
+          <div class="calendar-day-header">Mon</div>
+          <div class="calendar-day-header">Tue</div>
+          <div class="calendar-day-header">Wed</div>
+          <div class="calendar-day-header">Thu</div>
+          <div class="calendar-day-header">Fri</div>
+          <div class="calendar-day-header">Sat</div>
+        </div>
+        <div class="calendar-body" id="calendarBody">
+          <!-- populated by JS -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== UPCOMING EVENT LIST ========== -->
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-header fade-in">
+        <p class="section-eyebrow">Up Next</p>
+        <h2 class="section-title">Upcoming Events</h2>
+      </div>
+
+      <div class="event-list fade-in" id="upcomingEventList">
+        <!-- populated by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== RESERVATION FORM ========== -->
+  <section class="section" id="reserve" style="background:rgba(26,14,53,0.4);">
+    <div class="section-inner">
+      <div class="section-header fade-in">
+        <p class="section-eyebrow">Secure Your Seat</p>
+        <h2 class="section-title">Reserve a Table</h2>
+        <p class="section-desc">
+          Book ahead to guarantee your party's place in the adventure. Walk-ins welcome where space permits.
+        </p>
+      </div>
+
+      <div class="grid-2" style="align-items:start;">
+        <form class="card fade-in" id="reservationForm" onsubmit="handleReservation(event)">
+          <h3 class="card-title" style="margin-bottom:var(--space-lg);">📜 Reservation Request</h3>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="resName">Adventurer Name *</label>
+              <input class="form-input" type="text" id="resName" placeholder="Your name" required/>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="resEmail">Sending Scroll (Email) *</label>
+              <input class="form-input" type="email" id="resEmail" placeholder="your@email.com" required/>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="resDate">Quest Date *</label>
+              <input class="form-input" type="date" id="resDate" required/>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="resTime">Arrival Time *</label>
+              <select class="form-select" id="resTime" required>
+                <option value="">Select time...</option>
+                <option>12:00 pm</option>
+                <option>1:00 pm</option>
+                <option>2:00 pm</option>
+                <option>3:00 pm</option>
+                <option>4:00 pm</option>
+                <option>5:00 pm</option>
+                <option>6:00 pm</option>
+                <option>7:00 pm</option>
+                <option>8:00 pm</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="resParty">Party Size *</label>
+              <select class="form-select" id="resParty" required>
+                <option value="">Select size...</option>
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5–8</option>
+                <option>9–12</option>
+                <option>13–20</option>
+                <option>21–40</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="resType">Quest Type</label>
+              <select class="form-select" id="resType">
+                <option value="">General visit</option>
+                <option>Friday Night Magic</option>
+                <option>Painting Tutorial</option>
+                <option>Pint Night</option>
+                <option>Campaign Night</option>
+                <option>Private Event Hire</option>
+                <option>Birthday / Celebration</option>
+                <option>Other Event</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="resNotes">Special Requests / Notes</label>
+            <textarea class="form-textarea" id="resNotes" placeholder="Dietary requirements, accessibility needs, special occasion details..."></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width:100%;">
+            ⚔ Submit Reservation
+          </button>
+
+          <p style="font-size:0.8rem; color:var(--color-muted); margin-top:var(--space-md); font-style:italic; text-align:center;">
+            We'll confirm your booking via the sending scroll within 24 hours.
+          </p>
+        </form>
+
+        <div style="display:flex; flex-direction:column; gap:var(--space-lg);">
+          <div class="card fade-in">
+            <h3 class="card-title">📜 Reservation Policies</h3>
+            <ul style="list-style:none; display:flex; flex-direction:column; gap:var(--space-sm);">
+              <li style="color:var(--color-muted); font-size:0.9rem; padding-left:1.2rem; position:relative;">
+                <span style="position:absolute; left:0; color:var(--color-gold);">⬦</span>
+                Tables held for 15 minutes past booking time
+              </li>
+              <li style="color:var(--color-muted); font-size:0.9rem; padding-left:1.2rem; position:relative;">
+                <span style="position:absolute; left:0; color:var(--color-gold);">⬦</span>
+                Cancellations welcome up to 2 hours before arrival
+              </li>
+              <li style="color:var(--color-muted); font-size:0.9rem; padding-left:1.2rem; position:relative;">
+                <span style="position:absolute; left:0; color:var(--color-gold);">⬦</span>
+                Event registration (FNM, tournaments) requires advance payment
+              </li>
+              <li style="color:var(--color-muted); font-size:0.9rem; padding-left:1.2rem; position:relative;">
+                <span style="position:absolute; left:0; color:var(--color-gold);">⬦</span>
+                Private event deposits are non-refundable within 48 hours
+              </li>
+              <li style="color:var(--color-muted); font-size:0.9rem; padding-left:1.2rem; position:relative;">
+                <span style="position:absolute; left:0; color:var(--color-gold);">⬦</span>
+                All adventurers are welcome — we are an inclusive space
+              </li>
+            </ul>
+          </div>
+
+          <div class="card fade-in" style="border-color:rgba(212,175,55,0.3);">
+            <h3 class="card-title">🗺️ Find the Dungeon</h3>
+            <p class="card-text" style="margin-bottom:var(--space-md);">
+              123 Arcane Avenue, Dungeon Quarter<br/>
+              Near the Old Wizards' Tower roundabout
+            </p>
+            <div style="background:rgba(10,6,20,0.6); border:1px solid var(--color-card-border); border-radius:var(--radius-sm); height:160px; display:flex; align-items:center; justify-content:center;">
+              <span style="color:var(--color-muted); font-style:italic; font-size:0.9rem;">🗺️ Map embed placeholder</span>
+            </div>
+          </div>
+
+          <div class="card fade-in">
+            <h3 class="card-title">📞 Contact the Barkeep</h3>
+            <p class="card-text">
+              Phone: <span style="color:var(--color-gold);">(555) 0–D20–ROLL</span><br/>
+              Events: <span style="color:var(--color-gold);">events@draughts-n-dragons.com</span><br/>
+              General: <span style="color:var(--color-gold);">hello@draughts-n-dragons.com</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div>
+          <img src="assets/logo.svg" alt="Logo" class="footer-brand-logo"/>
+          <p class="footer-brand-name">Draughts &amp; Dragons</p>
+          <p class="footer-brand-desc">
+            Where the ale flows freely, the dice roll true, and every adventurer finds their story.
+          </p>
+          <div class="footer-social">
+            <a href="#" class="social-btn" title="Instagram">📷</a>
+            <a href="#" class="social-btn" title="Facebook">🌐</a>
+            <a href="#" class="social-btn" title="Discord">💬</a>
+            <a href="#" class="social-btn" title="Twitter/X">✦</a>
+          </div>
+        </div>
+        <div>
+          <h4 class="footer-heading">Navigate</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="offerings.html">Offerings</a></li>
+            <li><a href="events.html">Event Calendar</a></li>
+            <li><a href="#reserve">Reserve a Table</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="footer-heading">Events</h4>
+          <ul class="footer-links">
+            <li><a href="#fnm">Friday Night Magic</a></li>
+            <li><a href="#paint">Painting Tutorials</a></li>
+            <li><a href="#pint">Pint Night</a></li>
+            <li><a href="#campaign">Campaign Night</a></li>
+            <li><a href="#tournament">Tournaments</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="footer-heading">Visit Us</h4>
+          <ul class="footer-links" style="gap:0.75rem;">
+            <li style="color:var(--color-muted); font-size:0.9rem;">123 Arcane Avenue<br/>Dungeon Quarter</li>
+            <li style="color:var(--color-muted); font-size:0.9rem;">Tue–Thu: 3pm–11pm</li>
+            <li style="color:var(--color-muted); font-size:0.9rem;">Fri–Sat: 12pm–1am</li>
+            <li style="color:var(--color-muted); font-size:0.9rem;">Sunday: 12pm–9pm</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="footer-copy">&copy; 2026 Draughts &amp; Dragons. All rights reserved. May your dice always roll high.</p>
+        <span class="footer-d20">⬡</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========== EVENT DETAIL MODAL ========== -->
+  <div class="modal-overlay" id="eventModal">
+    <div class="modal">
+      <button class="modal-close" id="modalClose" aria-label="Close">&#10005;</button>
+      <p id="modalTag" class="announcement-tag tag-event" style="margin-bottom:0.75rem;"></p>
+      <h2 class="modal-title" id="modalTitle"></h2>
+      <p class="modal-meta" id="modalMeta"></p>
+      <p class="modal-desc" id="modalDesc"></p>
+      <div style="margin-top:var(--space-lg);">
+        <a href="#reserve" class="btn btn-primary" onclick="closeModal()">Book This Event ⚔</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

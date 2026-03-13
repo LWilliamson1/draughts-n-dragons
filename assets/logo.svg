@@ -1,0 +1,133 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240" width="200" height="240">
+  <defs>
+    <radialGradient id="skinGrad" cx="50%" cy="40%" r="50%">
+      <stop offset="0%" style="stop-color:#b06aad"/>
+      <stop offset="100%" style="stop-color:#7a3d7a"/>
+    </radialGradient>
+    <radialGradient id="eyeGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#ff6600"/>
+      <stop offset="100%" style="stop-color:#cc3300"/>
+    </radialGradient>
+    <linearGradient id="hornGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4a2040"/>
+      <stop offset="100%" style="stop-color:#1a0a1a"/>
+    </linearGradient>
+    <linearGradient id="apronGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#2c1a4a"/>
+      <stop offset="100%" style="stop-color:#1a0a2e"/>
+    </linearGradient>
+    <linearGradient id="tankardGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#c8960a"/>
+      <stop offset="100%" style="stop-color:#8a6200"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Left Horn -->
+  <path d="M72 55 Q55 20 68 5 Q62 25 78 48 Z" fill="url(#hornGrad)" stroke="#2a0a2a" stroke-width="1"/>
+  <!-- Left horn inner highlight -->
+  <path d="M73 52 Q60 24 70 10" fill="none" stroke="#6a3060" stroke-width="1.5" opacity="0.5"/>
+
+  <!-- Right Horn -->
+  <path d="M128 55 Q145 20 132 5 Q138 25 122 48 Z" fill="url(#hornGrad)" stroke="#2a0a2a" stroke-width="1"/>
+  <!-- Right horn inner highlight -->
+  <path d="M127 52 Q140 24 130 10" fill="none" stroke="#6a3060" stroke-width="1.5" opacity="0.5"/>
+
+  <!-- Neck -->
+  <rect x="88" y="118" width="24" height="20" rx="4" fill="url(#skinGrad)"/>
+
+  <!-- Head -->
+  <ellipse cx="100" cy="90" rx="38" ry="40" fill="url(#skinGrad)" stroke="#5a2855" stroke-width="1.5"/>
+
+  <!-- Pointed left ear -->
+  <path d="M62 88 Q50 80 56 96 Q62 100 68 95 Z" fill="url(#skinGrad)" stroke="#5a2855" stroke-width="1"/>
+  <!-- Pointed right ear -->
+  <path d="M138 88 Q150 80 144 96 Q138 100 132 95 Z" fill="url(#skinGrad)" stroke="#5a2855" stroke-width="1"/>
+
+  <!-- Hair -->
+  <path d="M65 72 Q68 45 100 50 Q132 45 135 72 Q125 55 100 58 Q75 55 65 72 Z" fill="#1a0a2e" stroke="#0a0014" stroke-width="1"/>
+  <!-- Hair strands -->
+  <path d="M75 65 Q78 52 88 56" fill="none" stroke="#2a1050" stroke-width="2"/>
+  <path d="M95 60 Q100 48 105 60" fill="none" stroke="#2a1050" stroke-width="2"/>
+  <path d="M115 65 Q112 52 102 56" fill="none" stroke="#2a1050" stroke-width="2"/>
+
+  <!-- Eyes - glowing amber/orange (infernal heritage) -->
+  <ellipse cx="85" cy="90" rx="9" ry="7" fill="#0a0014"/>
+  <ellipse cx="115" cy="90" rx="9" ry="7" fill="#0a0014"/>
+  <!-- Eye glow -->
+  <ellipse cx="85" cy="90" rx="6" ry="5" fill="url(#eyeGlow)" filter="url(#glow)"/>
+  <ellipse cx="115" cy="90" rx="6" ry="5" fill="url(#eyeGlow)" filter="url(#glow)"/>
+  <!-- Pupils - vertical slit -->
+  <ellipse cx="85" cy="90" rx="2" ry="4" fill="#660000"/>
+  <ellipse cx="115" cy="90" rx="2" ry="4" fill="#660000"/>
+  <!-- Eye shine -->
+  <ellipse cx="83" cy="88" rx="1.5" ry="1" fill="white" opacity="0.7"/>
+  <ellipse cx="113" cy="88" rx="1.5" ry="1" fill="white" opacity="0.7"/>
+
+  <!-- Eyebrows - arched, villainous -->
+  <path d="M76 81 Q85 77 94 80" fill="none" stroke="#1a0a2e" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M106 80 Q115 77 124 81" fill="none" stroke="#1a0a2e" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- Nose -->
+  <path d="M97 98 Q100 105 103 98" fill="none" stroke="#8a4080" stroke-width="1.5" stroke-linecap="round"/>
+
+  <!-- Smile - knowing grin -->
+  <path d="M86 110 Q100 120 114 110" fill="none" stroke="#5a2050" stroke-width="2" stroke-linecap="round"/>
+  <!-- Teeth hint -->
+  <path d="M90 112 Q100 118 110 112" fill="white" opacity="0.6"/>
+
+  <!-- Small fang -->
+  <path d="M93 114 L91 119 L96 114 Z" fill="white" opacity="0.8"/>
+  <path d="M107 114 L109 119 L104 114 Z" fill="white" opacity="0.8"/>
+
+  <!-- Body / Torso with bar apron -->
+  <!-- Shirt -->
+  <path d="M70 138 Q65 145 62 200 L138 200 Q135 145 130 138 Q115 130 100 132 Q85 130 70 138 Z" fill="#3d1a5e" stroke="#2a0a4a" stroke-width="1"/>
+
+  <!-- Apron -->
+  <path d="M80 138 Q78 148 76 200 L124 200 Q122 148 120 138 Q110 133 100 134 Q90 133 80 138 Z" fill="url(#apronGrad)" stroke="#3a2060" stroke-width="1"/>
+
+  <!-- Apron bib detail -->
+  <path d="M84 138 Q82 152 84 164 L116 164 Q118 152 116 138 Q108 134 100 135 Q92 134 84 138 Z" fill="#1e0e3a" stroke="#3a2060" stroke-width="1"/>
+
+  <!-- Apron strings at waist -->
+  <path d="M80 165 Q72 168 68 175" fill="none" stroke="#2c1a4a" stroke-width="2"/>
+  <path d="M120 165 Q128 168 132 175" fill="none" stroke="#2c1a4a" stroke-width="2"/>
+
+  <!-- Left arm -->
+  <path d="M68 140 Q55 150 50 175 Q55 178 62 175 Q65 158 75 148 Z" fill="url(#skinGrad)" stroke="#5a2855" stroke-width="1"/>
+
+  <!-- Right arm raised holding tankard -->
+  <path d="M132 140 Q145 135 155 120 Q158 115 155 110 Q148 115 145 122 Q138 130 128 145 Z" fill="url(#skinGrad)" stroke="#5a2855" stroke-width="1"/>
+
+  <!-- Tankard / Mug -->
+  <rect x="148" y="88" width="28" height="32" rx="4" fill="url(#tankardGrad)" stroke="#6a4400" stroke-width="1.5"/>
+  <!-- Tankard handle -->
+  <path d="M176 94 Q188 94 188 104 Q188 114 176 114" fill="none" stroke="url(#tankardGrad)" stroke-width="4" stroke-linecap="round"/>
+  <!-- Tankard rim -->
+  <rect x="145" y="85" width="34" height="6" rx="3" fill="#d4a010" stroke="#8a6200" stroke-width="1"/>
+  <!-- Foam / Ale -->
+  <ellipse cx="162" cy="88" rx="14" ry="5" fill="#f0e8a0" opacity="0.9"/>
+  <!-- Foam bubbles -->
+  <circle cx="155" cy="86" r="3" fill="white" opacity="0.8"/>
+  <circle cx="165" cy="84" r="4" fill="white" opacity="0.8"/>
+  <circle cx="172" cy="86" r="2.5" fill="white" opacity="0.8"/>
+
+  <!-- Tail (curling from behind, visible at bottom) -->
+  <path d="M110 200 Q130 195 140 210 Q150 225 135 230 Q125 232 122 220" fill="none" stroke="#7a3d7a" stroke-width="5" stroke-linecap="round"/>
+  <!-- Tail tip (arrow/spade shape) -->
+  <path d="M120 218 Q125 226 122 232 Q118 226 120 218 Z" fill="#5a2855"/>
+
+  <!-- Stars/sparkles for magical flair -->
+  <g filter="url(#glow)" opacity="0.8">
+    <text x="35" y="60" font-size="12" fill="#d4af37">✦</text>
+    <text x="155" y="75" font-size="10" fill="#d4af37">✦</text>
+    <text x="28" y="110" font-size="8" fill="#c084c8">✧</text>
+  </g>
+</svg>

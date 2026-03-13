@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Draughts & Dragons — Tavern, TTRPG & Retail</title>
+  <meta name="description" content="Draughts & Dragons — Your local fantasy bar and tabletop RPG retail haven. Fine ales, premium minis, paints, board games, and epic events."/>
+  <link rel="stylesheet" href="css/styles.css"/>
+  <link rel="icon" href="assets/d20.svg" type="image/svg+xml"/>
+</head>
+<body>
+  <div class="page-bg"></div>
+
+  <!-- ========== NAVBAR ========== -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <img src="assets/logo.svg" alt="Draughts & Dragons Logo" class="nav-logo"/>
+        <div class="nav-title">
+          <span class="nav-title-main">Draughts &amp; Dragons</span>
+          <span class="nav-title-sub">Tavern &bull; TTRPG &bull; Retail</span>
+        </div>
+      </a>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="offerings.html">Offerings</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="events.html" class="nav-cta">Reserve a Table</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ========== HERO ========== -->
+  <section class="hero">
+    <div class="hero-ornament"></div>
+    <div class="hero-content">
+      <img src="assets/logo.svg" alt="Tiefling Bartender" class="hero-logo"/>
+      <p class="hero-eyebrow">Welcome, Adventurer</p>
+      <h1 class="hero-title">
+        Draughts<br/>
+        <span class="ampersand">&amp;</span><br/>
+        Dragons
+      </h1>
+      <p class="hero-subtitle">Fine Ales &bull; Epic Quests &bull; Premium Hobby Supplies</p>
+
+      <div class="hero-divider">
+        <span class="hero-divider-icon">⚔️</span>
+      </div>
+
+      <p style="font-size:1.1rem; color:var(--color-muted); font-style:italic; max-width:520px; margin:0 auto var(--space-lg);">
+        Where every pint is a potion and every night is an adventure.
+        Pull up a chair, roll for initiative, and let the stories begin.
+      </p>
+
+      <div class="hero-cta-group">
+        <a href="events.html" class="btn btn-primary">⚔ View Events</a>
+        <a href="offerings.html" class="btn btn-outline">🎲 Explore Offerings</a>
+        <a href="#announcements" class="btn btn-ghost">📜 Latest News</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== INFO STRIP ========== -->
+  <div class="info-strip">
+    <div class="info-strip-inner">
+      <div class="info-item">
+        <span class="info-item-icon">🗺️</span>
+        <span>123 Arcane Ave, Dungeon Quarter</span>
+      </div>
+      <div class="info-item">
+        <span class="info-item-icon">⏳</span>
+        <span>Tue–Thu 3pm–11pm &bull; Fri–Sat 12pm–1am &bull; Sun 12pm–9pm</span>
+      </div>
+      <div class="info-item">
+        <span class="info-item-icon">📜</span>
+        <span>Reservations: (555) 0–D20–ROLL</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== ANNOUNCEMENTS ========== -->
+  <section class="section" id="announcements">
+    <div class="section-inner">
+      <div class="section-header fade-in">
+        <p class="section-eyebrow">From the Barkeep's Board</p>
+        <h2 class="section-title">Latest Announcements</h2>
+        <p class="section-desc">Town criers have been dispatched. Hear ye, hear ye.</p>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:var(--space-lg);">
+
+        <!-- Featured announcement -->
+        <div class="announcement-card featured fade-in">
+          <div class="announcement-date">
+            <span class="announcement-date-day">21</span>
+            <span class="announcement-date-month">Mar</span>
+          </div>
+          <div class="announcement-divider"></div>
+          <div class="announcement-body">
+            <span class="announcement-tag tag-event">Grand Opening</span>
+            <h3 class="announcement-title">Grand Opening Weekend — Roll for Adventure!</h3>
+            <p class="announcement-text">
+              The doors of Draughts &amp; Dragons swing open this weekend! Join us for three days of
+              free demos, painting workshops, prizes, and inaugural pint specials. Bring your party —
+              tables fill fast. Special appearance by the Dungeon Master of Ceremonies.
+            </p>
+            <a href="events.html" class="btn btn-outline mt-md" style="font-size:0.7rem; padding:0.5rem 1rem;">
+              See Full Schedule →
+            </a>
+          </div>
+        </div>
+
+        <!-- Regular announcements -->
+        <div class="grid-2">
+          <div class="announcement-card fade-in">
+            <div class="announcement-date">
+              <span class="announcement-date-day">28</span>
+              <span class="announcement-date-month">Mar</span>
+            </div>
+            <div class="announcement-divider"></div>
+            <div class="announcement-body">
+              <span class="announcement-tag tag-workshop">Workshop</span>
+              <h3 class="announcement-title">Spring Miniature Painting Series Begins</h3>
+              <p class="announcement-text">
+                Our resident painter Seraphina Brightquill leads a 4-week series covering
+                priming, base-coating, washes, and advanced highlighting. All skill levels welcome.
+                Kits provided — just bring your enthusiasm.
+              </p>
+            </div>
+          </div>
+
+          <div class="announcement-card fade-in">
+            <div class="announcement-date">
+              <span class="announcement-date-day">04</span>
+              <span class="announcement-date-month">Apr</span>
+            </div>
+            <div class="announcement-divider"></div>
+            <div class="announcement-body">
+              <span class="announcement-tag tag-sale">Sale</span>
+              <h3 class="announcement-title">New Citadel Paint Range Now In Stock</h3>
+              <p class="announcement-text">
+                We've just received a full range of the latest Citadel Contrast, Base, and Layer
+                paints. Loyalty card members get 10% off all paints for the first week.
+                Stop by and replenish your palette.
+              </p>
+            </div>
+          </div>
+
+          <div class="announcement-card fade-in">
+            <div class="announcement-date">
+              <span class="announcement-date-day">11</span>
+              <span class="announcement-date-month">Apr</span>
+            </div>
+            <div class="announcement-divider"></div>
+            <div class="announcement-body">
+              <span class="announcement-tag tag-event">Event</span>
+              <h3 class="announcement-title">Friday Night Magic — Prerelease Sealed Event</h3>
+              <p class="announcement-text">
+                Crack packs, brew a sealed deck, and battle for glory at our monthly FNM
+                prerelease. Entry includes 6 booster packs. Top 4 receive store credit.
+                Registration opens 6pm, games at 7pm.
+              </p>
+            </div>
+          </div>
+
+          <div class="announcement-card fade-in">
+            <div class="announcement-date">
+              <span class="announcement-date-day">18</span>
+              <span class="announcement-date-month">Apr</span>
+            </div>
+            <div class="announcement-divider"></div>
+            <div class="announcement-body">
+              <span class="announcement-tag tag-news">News</span>
+              <h3 class="announcement-title">New Terrain: Dungeon Delve Modular Sets Arrive</h3>
+              <p class="announcement-text">
+                We've partnered with Dragonlock &amp; Printable Scenery to offer exclusive
+                premium modular dungeon terrain kits, pre-painted and ready for your table.
+                Limited quantities — enquire at the bar.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="ornament-divider section-inner" style="max-width:1200px; margin:0 auto; padding:0 var(--space-lg);">
+    <span>⚜</span>
+  </div>
+
+  <!-- ========== FEATURE HIGHLIGHTS ========== -->
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-header fade-in">
+        <p class="section-eyebrow">What Awaits You</p>
+        <h2 class="section-title">A Realm of Many Pleasures</h2>
+        <p class="section-desc">From the bar top to the game table, every corner holds adventure.</p>
+      </div>
+
+      <div class="grid-3">
+        <div class="card fade-in">
+          <span class="card-icon">🍺</span>
+          <h3 class="card-title">The Tavern Bar</h3>
+          <p class="card-text">
+            Craft ales, infernal cocktails, and mead aplenty. Our themed menu changes seasonally
+            with adventurer-named brews. Non-alcoholic potions also available for all party members.
+          </p>
+          <a href="offerings.html#bar" class="btn btn-ghost mt-md" style="font-size:0.7rem; padding:0.5rem 1rem;">
+            View Menu →
+          </a>
+        </div>
+
+        <div class="card fade-in">
+          <span class="card-icon">🎲</span>
+          <h3 class="card-title">The Gaming Vault</h3>
+          <p class="card-text">
+            Premium minis, terrain, paints, board games, and TCG singles. Our knowledgeable
+            staff can guide any adventurer from first-timer to seasoned veteran.
+          </p>
+          <a href="offerings.html#retail" class="btn btn-ghost mt-md" style="font-size:0.7rem; padding:0.5rem 1rem;">
+            Browse Shop →
+          </a>
+        </div>
+
+        <div class="card fade-in">
+          <span class="card-icon">🏰</span>
+          <h3 class="card-title">Event Sanctum</h3>
+          <p class="card-text">
+            Private event space for up to 40 adventurers. Perfect for campaigns, birthdays,
+            corporate quests, and tournaments. Full AV setup, private bar access, custom decor.
+          </p>
+          <a href="events.html" class="btn btn-ghost mt-md" style="font-size:0.7rem; padding:0.5rem 1rem;">
+            Book Space →
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== UPCOMING EVENTS PREVIEW ========== -->
+  <section class="section" style="background: rgba(26,14,53,0.4);">
+    <div class="section-inner">
+      <div class="section-header fade-in">
+        <p class="section-eyebrow">On the Horizon</p>
+        <h2 class="section-title">Upcoming Quests</h2>
+      </div>
+
+      <div class="grid-3">
+        <div class="card fade-in" style="border-color: rgba(59,130,246,0.3);">
+          <span class="card-icon">🃏</span>
+          <h3 class="card-title" style="color: #93c5fd;">Friday Night Magic</h3>
+          <p class="card-text">Every Friday, 6pm. Competitive and casual formats. Prizes for top finishers. All sets welcome.</p>
+          <div class="mt-md"><span class="badge" style="background:rgba(59,130,246,0.15); color:#93c5fd; border-color:rgba(59,130,246,0.3);">Weekly</span></div>
+        </div>
+
+        <div class="card fade-in" style="border-color: rgba(34,197,94,0.3);">
+          <span class="card-icon">🎨</span>
+          <h3 class="card-title" style="color: #86efac;">Painting Tutorials</h3>
+          <p class="card-text">Every second Saturday, 2pm. Guided sessions from beginner to advanced. Materials supplied for beginners.</p>
+          <div class="mt-md"><span class="badge" style="background:rgba(34,197,94,0.15); color:#86efac; border-color:rgba(34,197,94,0.3);">Bi-weekly</span></div>
+        </div>
+
+        <div class="card fade-in" style="border-color: rgba(212,175,55,0.3);">
+          <span class="card-icon">🍻</span>
+          <h3 class="card-title" style="color: var(--color-gold);">Pint Night</h3>
+          <p class="card-text">Thursday evenings, 7pm. Themed ales, trivia, and casual gaming. New seasonal brew revealed each month.</p>
+          <div class="mt-md"><span class="badge">Weekly</span></div>
+        </div>
+      </div>
+
+      <div class="text-center mt-lg fade-in">
+        <a href="events.html" class="btn btn-primary">View Full Calendar ⚔</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div>
+          <img src="assets/logo.svg" alt="Logo" class="footer-brand-logo"/>
+          <p class="footer-brand-name">Draughts &amp; Dragons</p>
+          <p class="footer-brand-desc">
+            Where the ale flows freely, the dice roll true, and every adventurer finds their story.
+          </p>
+          <div class="footer-social">
+            <a href="#" class="social-btn" title="Instagram">📷</a>
+            <a href="#" class="social-btn" title="Facebook">🌐</a>
+            <a href="#" class="social-btn" title="Discord">💬</a>
+            <a href="#" class="social-btn" title="Twitter/X">✦</a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="footer-heading">Navigate</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="offerings.html">Offerings</a></li>
+            <li><a href="events.html">Event Calendar</a></li>
+            <li><a href="events.html#reserve">Reserve a Table</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-heading">Offerings</h4>
+          <ul class="footer-links">
+            <li><a href="offerings.html#bar">The Bar</a></li>
+            <li><a href="offerings.html#minis">Minis &amp; Terrain</a></li>
+            <li><a href="offerings.html#paints">Paints</a></li>
+            <li><a href="offerings.html#board-games">Board Games</a></li>
+            <li><a href="offerings.html#tcg">TCG Cards</a></li>
+            <li><a href="offerings.html#events">Event Space</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-heading">Visit Us</h4>
+          <ul class="footer-links" style="gap:0.75rem;">
+            <li style="color:var(--color-muted); font-size:0.9rem;">123 Arcane Avenue<br/>Dungeon Quarter</li>
+            <li style="color:var(--color-muted); font-size:0.9rem;">Tue–Thu: 3pm–11pm</li>
+            <li style="color:var(--color-muted); font-size:0.9rem;">Fri–Sat: 12pm–1am</li>
+            <li style="color:var(--color-muted); font-size:0.9rem;">Sunday: 12pm–9pm</li>
+            <li style="color:var(--color-muted); font-size:0.9rem;">Closed Mondays</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p class="footer-copy">&copy; 2026 Draughts &amp; Dragons. All rights reserved. May your dice always roll high.</p>
+        <span class="footer-d20">⬡</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
