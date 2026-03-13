@@ -61,7 +61,7 @@ const staticFeaturedOfferings = [
     icon: <GobletIcon size={48} />,
     title: "Craft Ales & Spirits",
     desc: "A curated selection of brews themed for every class, race, and alignment.",
-    href: "/offerings#bar",
+    href: "/menu",
   },
   {
     icon: <MagicStarIcon size={48} />,

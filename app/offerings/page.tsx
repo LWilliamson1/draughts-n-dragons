@@ -134,7 +134,7 @@ const fallbackOfferings: OfferingData[] = [
       "Custom brew pairings for events",
     ],
     cta: "See the Menu",
-    ctaHref: "#bar",
+    ctaHref: "/menu",
     badge: "24 ON TAP",
     badgeColor: "bg-tavern-brown text-parchment",
     accentColor: "#8b5e3c",
