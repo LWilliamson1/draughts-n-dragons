@@ -16,6 +16,7 @@ model User {
   googleId  String?  @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  rsvps     Rsvp[]
 }
 
 model Event {
@@ -37,6 +38,21 @@ model Event {
   displayOrder Int      @default(0)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+  rsvps        Rsvp[]
+}
+
+model Rsvp {
+  id        String   @id @default(cuid())
+  userId    String
+  eventId   String
+  name      String
+  email     String
+  tickets   Int      @default(1)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, eventId])
 }
 
 model Offering {

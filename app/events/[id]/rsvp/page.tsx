@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import RsvpForm from "./RsvpForm";
 
@@ -14,7 +16,10 @@ const categoryColors: Record<string, string> = {
 export default async function RsvpPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
-  const event = await prisma.event.findUnique({ where: { id, published: true } }).catch(() => null);
+  const [event, session] = await Promise.all([
+    prisma.event.findUnique({ where: { id, published: true } }).catch(() => null),
+    getServerSession(authOptions),
+  ]);
 
   if (!event) notFound();
 
@@ -22,6 +27,13 @@ export default async function RsvpPage({ params }: { params: Promise<{ id: strin
   const spotsRemaining = event.capacity !== null ? event.capacity - event.signups : null;
   const isFree =
     event.price.toLowerCase().includes("free") || event.price.toLowerCase().includes("pint");
+
+  const existingRsvp =
+    session?.user?.id
+      ? await prisma.rsvp.findUnique({
+          where: { userId_eventId: { userId: session.user.id, eventId: id } },
+        }).catch(() => null)
+      : null;
 
   return (
     <main className="min-h-screen bg-dungeon-dark text-parchment py-16 px-4">
@@ -96,10 +108,10 @@ export default async function RsvpPage({ params }: { params: Promise<{ id: strin
           {/* ── Checkout panel ──────────────────────────────────── */}
           <div className="bg-dungeon-mid border border-dungeon-purple rounded-2xl p-6">
             <h2 className="font-cinzel text-gold-rune text-lg font-bold mb-5">
-              {isFull ? "Event Full" : "Reserve Your Spot"}
+              {existingRsvp ? "Your RSVP" : isFull ? "Event Full" : "Reserve Your Spot"}
             </h2>
 
-            {isFull ? (
+            {!existingRsvp && isFull ? (
               <div className="text-center py-6 flex flex-col items-center gap-3">
                 <div className="text-4xl">⚔️</div>
                 <p className="font-im-fell text-parchment-dark opacity-60 text-sm italic">
@@ -120,6 +132,8 @@ export default async function RsvpPage({ params }: { params: Promise<{ id: strin
                 price={event.price}
                 isFree={isFree}
                 spotsRemaining={spotsRemaining}
+                sessionUser={session?.user ?? null}
+                alreadyRsvped={!!existingRsvp}
               />
             )}
           </div>

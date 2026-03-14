@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { prisma } from "@/lib/prisma";
 import SignOutButton from "./SignOutButton";
 
 // ── Small stat card ──────────────────────────────────────────────────────────
@@ -44,6 +45,12 @@ export default async function AccountPage() {
     : email?.[0]?.toUpperCase() ?? "?";
 
   const isGoogle = !!(image);
+
+  const rsvps = await prisma.rsvp.findMany({
+    where: { userId: session.user.id },
+    include: { event: true },
+    orderBy: { createdAt: "desc" },
+  });
 
   return (
     <div className="min-h-screen bg-dungeon-black text-parchment">
@@ -104,12 +111,45 @@ export default async function AccountPage() {
             Your Adventure
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <StatCard icon="🎲" label="Events RSVPed" coming />
+            <StatCard icon="🎲" label="Events RSVPed" value={rsvps.length.toString()} />
             <StatCard icon="📦" label="Orders" coming />
             <StatCard icon="🛒" label="Wishlist" coming />
             <StatCard icon="⚔️" label="Member since" value={new Date().getFullYear().toString()} />
           </div>
         </section>
+
+        {/* RSVPs */}
+        {rsvps.length > 0 && (
+          <section>
+            <h2 className="font-cinzel text-xs tracking-[0.3em] uppercase text-parchment-dark/50 mb-4">
+              Your Events
+            </h2>
+            <div className="flex flex-col gap-3">
+              {rsvps.map(({ id, tickets, createdAt, event }) => (
+                <div
+                  key={id}
+                  className="bg-dungeon-mid rounded-xl border border-dungeon-purple/30 p-4 flex items-center gap-4"
+                >
+                  <div className="text-3xl flex-shrink-0">{event.icon}</div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-cinzel text-sm text-parchment font-bold truncate">{event.title}</p>
+                    <p className="font-im-fell text-parchment-dark/60 text-xs mt-0.5">
+                      {event.dayOfWeek}, {event.month} {event.date} · {event.time}
+                    </p>
+                  </div>
+                  <div className="flex-shrink-0 text-right">
+                    <p className="font-cinzel text-xs text-gold-rune font-bold">
+                      {tickets} spot{tickets !== 1 ? "s" : ""}
+                    </p>
+                    <p className="font-im-fell text-parchment-dark/40 text-[11px] mt-0.5">
+                      RSVPed {new Date(createdAt).toLocaleDateString()}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* Profile section */}
         <section className="bg-dungeon-mid rounded-xl border border-dungeon-purple/30 p-6">

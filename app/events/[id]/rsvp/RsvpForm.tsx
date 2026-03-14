@@ -1,25 +1,60 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
+import { createRsvp } from "@/app/actions/rsvp";
+
+interface SessionUser {
+  name?: string | null;
+  email?: string | null;
+}
 
 interface RsvpFormProps {
   eventId: string;
   price: string;
   isFree: boolean;
-  spotsRemaining: number | null; // null = unlimited
+  spotsRemaining: number | null;
+  sessionUser: SessionUser | null;
+  alreadyRsvped: boolean;
 }
 
-export default function RsvpForm({ price, isFree, spotsRemaining }: RsvpFormProps) {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+export default function RsvpForm({
+  eventId,
+  price,
+  isFree,
+  spotsRemaining,
+  sessionUser,
+  alreadyRsvped,
+}: RsvpFormProps) {
+  const [name, setName] = useState(sessionUser?.name ?? "");
+  const [email, setEmail] = useState(sessionUser?.email ?? "");
   const [tickets, setTickets] = useState(1);
-  const [submitted, setSubmitted] = useState(false);
+  const [submitted, setSubmitted] = useState(alreadyRsvped);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const maxTickets = spotsRemaining !== null ? Math.min(spotsRemaining, 4) : 4;
-
-  // Parse a numeric price like "$15" or "$25 Entry" → 15 / 25
   const numericPrice = parseFloat(price.replace(/[^0-9.]/g, "")) || 0;
   const total = (numericPrice * tickets).toFixed(2);
+
+  // Not signed in — prompt login
+  if (!sessionUser) {
+    return (
+      <div className="text-center py-8 flex flex-col items-center gap-4">
+        <div className="text-4xl">🔐</div>
+        <p className="font-im-fell text-parchment-dark opacity-70 text-sm">
+          You must be signed in to reserve a spot.
+        </p>
+        <Link
+          href={`/auth/signin?callbackUrl=/events/${eventId}/rsvp`}
+          className="font-cinzel text-sm tracking-wider uppercase px-6 py-2.5 rounded-xl
+            bg-gold-rune text-dungeon-dark font-bold hover:bg-gold-bright transition-colors"
+        >
+          Sign In to RSVP
+        </Link>
+      </div>
+    );
+  }
 
   if (submitted) {
     return (
@@ -27,22 +62,29 @@ export default function RsvpForm({ price, isFree, spotsRemaining }: RsvpFormProp
         <div className="text-5xl">🎉</div>
         <h2 className="font-cinzel text-gold-rune text-xl font-bold">You&apos;re on the list!</h2>
         <p className="font-im-fell text-parchment-dark opacity-70 text-sm max-w-xs">
-          A confirmation will be sent to <span className="text-parchment">{email}</span> once
-          payment processing is live. We&apos;ll hold your {tickets > 1 ? `${tickets} spots` : "spot"} in
-          the meantime.
+          Your spot{tickets > 1 ? `s (${tickets})` : ""} {alreadyRsvped ? "are" : "have been"} reserved
+          for <span className="text-parchment">{email}</span>.
         </p>
       </div>
     );
   }
 
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    try {
+      await createRsvp(eventId, name, email, tickets);
+      setSubmitted(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        setSubmitted(true);
-      }}
-      className="flex flex-col gap-5"
-    >
+    <form onSubmit={handleSubmit} className="flex flex-col gap-5">
       {/* Attendee details */}
       <div>
         <h3 className="font-cinzel text-parchment text-sm tracking-wider uppercase mb-3">
@@ -106,7 +148,9 @@ export default function RsvpForm({ price, isFree, spotsRemaining }: RsvpFormProp
               +
             </button>
             <span className="font-im-fell text-parchment-dark opacity-40 text-sm italic">
-              {spotsRemaining !== null ? `${spotsRemaining} spot${spotsRemaining === 1 ? "" : "s"} remaining` : ""}
+              {spotsRemaining !== null
+                ? `${spotsRemaining} spot${spotsRemaining === 1 ? "" : "s"} remaining`
+                : ""}
             </span>
           </div>
         </div>
@@ -138,20 +182,21 @@ export default function RsvpForm({ price, isFree, spotsRemaining }: RsvpFormProp
         )}
       </div>
 
+      {/* Error */}
+      {error && (
+        <p className="font-im-fell text-dragon-crimson text-sm text-center">{error}</p>
+      )}
+
       {/* CTA */}
-      <div className="flex flex-col gap-2">
-        <button
-          type="submit"
-          className="w-full font-cinzel text-sm tracking-wider uppercase py-3 rounded-xl
-            bg-gold-rune text-dungeon-dark font-bold
-            hover:bg-gold-bright transition-colors"
-        >
-          {isFree ? "Reserve My Spot" : `Pay $${total}`}
-        </button>
-        <p className="font-im-fell text-parchment-dark opacity-40 text-xs italic text-center">
-          Stripe payment integration coming soon — your spot will be held automatically.
-        </p>
-      </div>
+      <button
+        type="submit"
+        disabled={loading}
+        className="w-full font-cinzel text-sm tracking-wider uppercase py-3 rounded-xl
+          bg-gold-rune text-dungeon-dark font-bold
+          hover:bg-gold-bright transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        {loading ? "Reserving…" : isFree ? "Reserve My Spot" : `Pay $${total}`}
+      </button>
     </form>
   );
 }
