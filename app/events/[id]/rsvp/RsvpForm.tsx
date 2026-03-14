@@ -47,29 +47,6 @@ function buildTimes(ev: CalendarEvent) {
   return { start, end };
 }
 
-function downloadIcs(ev: CalendarEvent) {
-  const { start, end } = buildTimes(ev);
-  const lines = [
-    "BEGIN:VCALENDAR",
-    "VERSION:2.0",
-    "PRODID:-//Draughts & Dragons//EN",
-    "BEGIN:VEVENT",
-    `DTSTART:${start}`,
-    `DTEND:${end}`,
-    `SUMMARY:${ev.title}`,
-    `DESCRIPTION:${ev.description.replace(/\n/g, "\\n")}`,
-    "LOCATION:Draughts & Dragons",
-    "END:VEVENT",
-    "END:VCALENDAR",
-  ].join("\r\n");
-  const blob = new Blob([lines], { type: "text/calendar;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `${ev.title.replace(/[^a-z0-9]/gi, "-")}.ics`;
-  a.click();
-  URL.revokeObjectURL(url);
-}
 
 function googleCalendarUrl(ev: CalendarEvent) {
   const { start, end } = buildTimes(ev);
@@ -195,9 +172,8 @@ export default function RsvpForm({
             </svg>
             Google Calendar
           </a>
-          <button
-            type="button"
-            onClick={() => downloadIcs(calendarEvent)}
+          <a
+            href={`webcal://${typeof window !== "undefined" ? window.location.host : ""}/api/events/${eventId}/ics`}
             className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl border
               border-dungeon-purple text-parchment-dark hover:border-arcane-violet hover:text-parchment
               font-cinzel text-xs tracking-wider uppercase transition-colors"
@@ -205,8 +181,8 @@ export default function RsvpForm({
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-4 h-4 flex-shrink-0" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
             </svg>
-            Apple / Outlook (.ics)
-          </button>
+            Apple Calendar
+          </a>
         </div>
       </div>
     );
