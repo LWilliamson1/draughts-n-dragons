@@ -89,21 +89,16 @@ function DesktopAccountMenu({
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-label="Account menu"
-        className="flex flex-col items-center gap-1 group"
+        className="flex items-center gap-2 group"
       >
-        <div className="flex items-center gap-2">
-          <AvatarCircle
-            image={image} name={name} email={email} size={32}
-            className={`border transition-colors ${open ? "border-gold-rune" : "border-gold-rune/40 group-hover:border-gold-rune"}`}
-          />
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"
-            className={`text-parchment-dark/50 transition-transform duration-200 ${open ? "rotate-180" : ""}`}>
-            <path d="M6 8L1 3h10z" />
-          </svg>
-        </div>
-        <span className="font-cinzel text-xs tracking-widest uppercase text-parchment-dark/70 group-hover:text-gold-rune transition-colors duration-200">
-          My Account
-        </span>
+        <AvatarCircle
+          image={image} name={name} email={email} size={32}
+          className={`border transition-colors ${open ? "border-gold-rune" : "border-gold-rune/40 group-hover:border-gold-rune"}`}
+        />
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"
+          className={`text-parchment-dark/50 transition-transform duration-200 ${open ? "rotate-180" : ""}`}>
+          <path d="M6 8L1 3h10z" />
+        </svg>
       </button>
 
       {open && (
@@ -261,22 +256,17 @@ export default function Header() {
 
               {/* Mobile toggle — avatar + "My Account" when signed in, hamburger/X when not */}
               <button
-                className="md:hidden flex flex-col items-center gap-0.5 text-parchment-dark hover:text-gold-rune transition-colors"
+                className="md:hidden text-parchment-dark hover:text-gold-rune transition-colors"
                 aria-label={mobileOpen ? "Close menu" : "Open menu"}
                 onClick={() => setMobileOpen((v) => !v)}
               >
                 {status === "loading" ? (
                   <div className="w-8 h-8 rounded-full bg-dungeon-purple/40 animate-pulse" />
                 ) : isSignedIn ? (
-                  <>
-                    <AvatarCircle
-                      image={image} name={name} email={email} size={36}
-                      className={`border-2 transition-colors ${mobileOpen ? "border-gold-rune" : "border-gold-rune/40"}`}
-                    />
-                    <span className="font-cinzel text-[10px] tracking-widest uppercase text-parchment-dark/70">
-                      My Account
-                    </span>
-                  </>
+                  <AvatarCircle
+                    image={image} name={name} email={email} size={36}
+                    className={`border-2 transition-colors ${mobileOpen ? "border-gold-rune" : "border-gold-rune/40"}`}
+                  />
                 ) : mobileOpen ? (
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <line x1="18" y1="6" x2="6" y2="18" />
