@@ -25,7 +25,7 @@ function AvatarCircle({
   size: number; className?: string;
 }) {
   const initials = name
-    ? name.split(" ").map((w: string) => w[0]).join("").slice(0, 2).toUpperCase()
+    ? name[0].toUpperCase()
     : email?.[0]?.toUpperCase() ?? "?";
 
   if (image) {
