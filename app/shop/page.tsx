@@ -385,6 +385,7 @@ const stockColors: Record<Stock, string> = {
 export default function ShopPage() {
   const [active, setActive] = useState<Category>("ALL");
   const [added, setAdded] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
   const { addItem } = useCart();
 
   function handleAddToCart(product: Product) {
@@ -399,7 +400,16 @@ export default function ShopPage() {
     setTimeout(() => setAdded(null), 1200);
   }
 
-  const filtered = active === "ALL" ? products : products.filter((p) => p.category === active);
+  const query = search.trim().toLowerCase();
+  const filtered = products.filter((p) => {
+    const matchesCategory = active === "ALL" || p.category === active;
+    const matchesSearch =
+      !query ||
+      p.name.toLowerCase().includes(query) ||
+      p.brand.toLowerCase().includes(query) ||
+      p.description.toLowerCase().includes(query);
+    return matchesCategory && matchesSearch;
+  });
 
   return (
     <div className="min-h-screen bg-dungeon-dark text-parchment">
@@ -421,6 +431,20 @@ export default function ShopPage() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 py-10">
+        {/* ── Search ────────────────────────────────────────── */}
+        <div className="mb-6">
+          <input
+            type="search"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search by name, brand, or description…"
+            aria-label="Search products"
+            className="w-full max-w-lg font-im-fell text-parchment bg-dungeon-mid border border-dungeon-purple rounded-lg
+              px-4 py-2.5 text-sm placeholder-parchment-dark placeholder-opacity-40
+              focus:outline-none focus:border-arcane-violet transition-colors duration-200"
+          />
+        </div>
+
         {/* ── Category filters ──────────────────────────────── */}
         <div className="flex flex-wrap gap-2 mb-8">
           {categories.map((cat) => (
@@ -447,6 +471,7 @@ export default function ShopPage() {
         <p className="font-im-fell text-parchment-dark opacity-40 text-sm italic mb-6">
           {filtered.length} item{filtered.length !== 1 ? "s" : ""}
           {active !== "ALL" ? ` in ${active}` : " across all categories"}
+          {query ? ` matching "${search.trim()}"` : ""}
         </p>
 
         {/* ── Product grid ──────────────────────────────────── */}
