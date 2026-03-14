@@ -1,42 +1,53 @@
 "use server";
 
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
-export async function createRsvp(
-  eventId: string,
-  name: string,
-  email: string,
-  tickets: number,
-) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id) throw new Error("You must be signed in to RSVP.");
-
-  const userId = session.user.id;
-
-  const event = await prisma.event.findUnique({ where: { id: eventId, published: true } });
-  if (!event) throw new Error("Event not found.");
-
-  if (event.capacity !== null && event.signups + tickets > event.capacity) {
-    throw new Error("Not enough spots remaining.");
+export async function createRsvp({
+  eventId,
+  userId,
+  name,
+  email,
+  quantity,
+}: {
+  eventId: string;
+  userId?: string | null;
+  name: string;
+  email: string;
+  quantity: number;
+}): Promise<{ success?: true; error?: string }> {
+  // Prevent duplicate RSVP for signed-in users
+  if (userId) {
+    const existing = await prisma.rsvp.findUnique({
+      where: { userId_eventId: { userId, eventId } },
+    });
+    if (existing) return { error: "You have already RSVPed to this event." };
   }
 
-  const existing = await prisma.rsvp.findUnique({
-    where: { userId_eventId: { userId, eventId } },
+  // Check capacity
+  const event = await prisma.event.findUnique({
+    where: { id: eventId },
+    select: { capacity: true, signups: true },
   });
-  if (existing) throw new Error("You have already RSVPed to this event.");
+  if (!event) return { error: "Event not found." };
+  if (event.capacity !== null && event.signups + quantity > event.capacity) {
+    return { error: "Not enough spots remaining." };
+  }
 
+  // Create RSVP + increment signups atomically
   await prisma.$transaction([
-    prisma.rsvp.create({ data: { userId, eventId, name, email, tickets } }),
+    prisma.rsvp.create({
+      data: { eventId, userId: userId ?? null, name, email, quantity },
+    }),
     prisma.event.update({
       where: { id: eventId },
-      data: { signups: { increment: tickets } },
+      data: { signups: { increment: quantity } },
     }),
   ]);
 
   revalidatePath(`/events/${eventId}/rsvp`);
   revalidatePath("/events");
   revalidatePath("/account");
+
+  return { success: true };
 }

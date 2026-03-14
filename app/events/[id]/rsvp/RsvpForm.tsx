@@ -1,21 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import Link from "next/link";
 import { createRsvp } from "@/app/actions/rsvp";
-
-interface SessionUser {
-  name?: string | null;
-  email?: string | null;
-}
 
 interface RsvpFormProps {
   eventId: string;
   price: string;
   isFree: boolean;
   spotsRemaining: number | null;
-  sessionUser: SessionUser | null;
-  alreadyRsvped: boolean;
+  /** Passed from server when the visitor is signed in */
+  userId?: string | null;
+  defaultName?: string | null;
+  defaultEmail?: string | null;
+  /** True when a signed-in user already has an RSVP for this event */
+  alreadyRsvped?: boolean;
 }
 
 export default function RsvpForm({
@@ -23,22 +22,24 @@ export default function RsvpForm({
   price,
   isFree,
   spotsRemaining,
-  sessionUser,
-  alreadyRsvped,
+  userId,
+  defaultName,
+  defaultEmail,
+  alreadyRsvped = false,
 }: RsvpFormProps) {
-  const [name, setName] = useState(sessionUser?.name ?? "");
-  const [email, setEmail] = useState(sessionUser?.email ?? "");
+  const [name, setName] = useState(defaultName ?? "");
+  const [email, setEmail] = useState(defaultEmail ?? "");
   const [tickets, setTickets] = useState(1);
-  const [submitted, setSubmitted] = useState(alreadyRsvped);
-  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(alreadyRsvped);
   const [error, setError] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
 
   const maxTickets = spotsRemaining !== null ? Math.min(spotsRemaining, 4) : 4;
   const numericPrice = parseFloat(price.replace(/[^0-9.]/g, "")) || 0;
   const total = (numericPrice * tickets).toFixed(2);
 
   // Not signed in — prompt login
-  if (!sessionUser) {
+  if (!userId) {
     return (
       <div className="text-center py-8 flex flex-col items-center gap-4">
         <div className="text-4xl">🔐</div>
@@ -56,31 +57,39 @@ export default function RsvpForm({
     );
   }
 
-  if (submitted) {
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+    startTransition(async () => {
+      const result = await createRsvp({ eventId, userId, name, email, quantity: tickets });
+      if (result.error) {
+        setError(result.error);
+      } else {
+        setSuccess(true);
+      }
+    });
+  }
+
+  if (success) {
     return (
       <div className="text-center py-10 flex flex-col items-center gap-4">
         <div className="text-5xl">🎉</div>
         <h2 className="font-cinzel text-gold-rune text-xl font-bold">You&apos;re on the list!</h2>
         <p className="font-im-fell text-parchment-dark opacity-70 text-sm max-w-xs">
-          Your spot{tickets > 1 ? `s (${tickets})` : ""} {alreadyRsvped ? "are" : "have been"} reserved
-          for <span className="text-parchment">{email}</span>.
+          {alreadyRsvped
+            ? "You've already secured your spot for this event."
+            : <>
+                We&apos;ve reserved {tickets > 1 ? `${tickets} spots` : "your spot"} for{" "}
+                <span className="text-parchment">{email}</span>. Check{" "}
+                <a href="/account" className="underline hover:text-gold-rune transition-colors">
+                  My Events
+                </a>{" "}
+                to manage your bookings.
+              </>
+          }
         </p>
       </div>
     );
-  }
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-    try {
-      await createRsvp(eventId, name, email, tickets);
-      setSubmitted(true);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
-    } finally {
-      setLoading(false);
-    }
   }
 
   return (
@@ -188,15 +197,20 @@ export default function RsvpForm({
       )}
 
       {/* CTA */}
-      <button
-        type="submit"
-        disabled={loading}
-        className="w-full font-cinzel text-sm tracking-wider uppercase py-3 rounded-xl
-          bg-gold-rune text-dungeon-dark font-bold
-          hover:bg-gold-bright transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-      >
-        {loading ? "Reserving…" : isFree ? "Reserve My Spot" : `Pay $${total}`}
-      </button>
+      <div className="flex flex-col gap-2">
+        <button
+          type="submit"
+          disabled={isPending}
+          className="w-full font-cinzel text-sm tracking-wider uppercase py-3 rounded-xl
+            bg-gold-rune text-dungeon-dark font-bold
+            hover:bg-gold-bright transition-colors disabled:opacity-60"
+        >
+          {isPending ? "Reserving…" : isFree ? "Reserve My Spot" : `Pay $${total}`}
+        </button>
+        <p className="font-im-fell text-parchment-dark opacity-40 text-xs italic text-center">
+          Stripe payment integration coming soon — your spot will be held automatically.
+        </p>
+      </div>
     </form>
   );
 }

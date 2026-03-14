@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { authOptions } from "@/lib/auth";
 import RsvpForm from "./RsvpForm";
 
 const categoryColors: Record<string, string> = {
@@ -28,12 +28,13 @@ export default async function RsvpPage({ params }: { params: Promise<{ id: strin
   const isFree =
     event.price.toLowerCase().includes("free") || event.price.toLowerCase().includes("pint");
 
-  const existingRsvp =
-    session?.user?.id
-      ? await prisma.rsvp.findUnique({
-          where: { userId_eventId: { userId: session.user.id, eventId: id } },
-        }).catch(() => null)
-      : null;
+  // Check if this signed-in user already has an RSVP
+  const userId = session?.user?.id ?? null;
+  const existingRsvp = userId
+    ? await prisma.rsvp.findUnique({
+        where: { userId_eventId: { userId, eventId: id } },
+      }).catch(() => null)
+    : null;
 
   return (
     <main className="min-h-screen bg-dungeon-dark text-parchment py-16 px-4">
@@ -108,10 +109,10 @@ export default async function RsvpPage({ params }: { params: Promise<{ id: strin
           {/* ── Checkout panel ──────────────────────────────────── */}
           <div className="bg-dungeon-mid border border-dungeon-purple rounded-2xl p-6">
             <h2 className="font-cinzel text-gold-rune text-lg font-bold mb-5">
-              {existingRsvp ? "Your RSVP" : isFull ? "Event Full" : "Reserve Your Spot"}
+              {existingRsvp ? "You're Going!" : isFull ? "Event Full" : "Reserve Your Spot"}
             </h2>
 
-            {!existingRsvp && isFull ? (
+            {isFull && !existingRsvp ? (
               <div className="text-center py-6 flex flex-col items-center gap-3">
                 <div className="text-4xl">⚔️</div>
                 <p className="font-im-fell text-parchment-dark opacity-60 text-sm italic">
@@ -132,7 +133,9 @@ export default async function RsvpPage({ params }: { params: Promise<{ id: strin
                 price={event.price}
                 isFree={isFree}
                 spotsRemaining={spotsRemaining}
-                sessionUser={session?.user ?? null}
+                userId={userId}
+                defaultName={session?.user?.name ?? null}
+                defaultEmail={session?.user?.email ?? null}
                 alreadyRsvped={!!existingRsvp}
               />
             )}
