@@ -2,6 +2,8 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { sendEmail } from "@/lib/email";
+import { EmailType } from "@/app/generated/prisma/client";
 
 export async function createRsvp({
   eventId,
@@ -24,15 +26,25 @@ export async function createRsvp({
     if (existing) return { error: "You have already RSVPed to this event." };
   }
 
-  // Check capacity
+  // Check capacity + fetch event details for the confirmation email
   const event = await prisma.event.findUnique({
     where: { id: eventId },
-    select: { capacity: true, signups: true },
+    select: {
+      capacity: true, signups: true,
+      title: true, date: true, dayOfWeek: true, month: true, year: true,
+      time: true, description: true, price: true,
+    },
   });
   if (!event) return { error: "Event not found." };
   if (event.capacity !== null && event.signups + quantity > event.capacity) {
     return { error: "Not enough spots remaining." };
   }
+
+  const isFree =
+    !event.price ||
+    event.price.toLowerCase() === "free" ||
+    event.price === "£0" ||
+    event.price === "$0";
 
   // Create RSVP + increment signups atomically
   await prisma.$transaction([
@@ -44,6 +56,32 @@ export async function createRsvp({
       data: { signups: { increment: quantity } },
     }),
   ]);
+
+  // Send confirmation immediately — transactional emails should not wait for
+  // the daily cron. Errors are logged but do not fail the RSVP.
+  const appUrl = process.env.NEXTAUTH_URL ?? "https://draughtsndragons.com";
+  const dateLabel = `${event.dayOfWeek}, ${event.date} ${event.month} ${event.year}`;
+
+  try {
+    await sendEmail({
+      to: email,
+      type: EmailType.RSVP_CONFIRMATION,
+      payload: {
+        name,
+        eventTitle: event.title,
+        eventDate: dateLabel,
+        eventTime: event.time,
+        eventDescription: event.description,
+        quantity,
+        price: event.price,
+        isFree,
+        eventId,
+        appUrl,
+      },
+    });
+  } catch (err) {
+    console.error("[rsvp] confirmation email failed:", err);
+  }
 
   revalidatePath(`/events/${eventId}/rsvp`);
   revalidatePath("/events");

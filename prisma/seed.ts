@@ -67,6 +67,20 @@ async function main() {
     console.log("✅ Announcements seeded");
   }
 
+  // ── Default reminder cadences ────────────────────────────────
+  for (const cadence of [
+    { label: "7 days before",  hoursBefore: 168 },
+    { label: "1 day before",   hoursBefore: 24  },
+    { label: "2 hours before", hoursBefore: 2   },
+  ]) {
+    await prisma.reminderCadence.upsert({
+      where: { hoursBefore: cadence.hoursBefore },
+      update: {},
+      create: cadence,
+    });
+  }
+  console.log("✅ Reminder cadences seeded");
+
   console.log("🎉 Seed complete!");
 }
 

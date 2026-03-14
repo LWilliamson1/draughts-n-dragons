@@ -20,24 +20,25 @@ model User {
 }
 
 model Event {
-  id           String   @id @default(cuid())
+  id           String    @id @default(cuid())
   date         String
   dayOfWeek    String
   month        String
-  year         Int      @default(2026)
+  year         Int       @default(2026)
   title        String
   time         String
+  eventAt      DateTime?
   category     String
   description  String
   icon         String
   price        String
   capacity     Int?
-  signups      Int      @default(0)
-  featured     Boolean  @default(false)
-  published    Boolean  @default(true)
-  displayOrder Int      @default(0)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  signups      Int       @default(0)
+  featured     Boolean   @default(false)
+  published    Boolean   @default(true)
+  displayOrder Int       @default(0)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
   rsvps        Rsvp[]
 }
 
@@ -72,6 +73,58 @@ model Offering {
   published    Boolean  @default(true)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+}
+
+// ── Email system ──────────────────────────────────────────────────────────────
+
+enum EmailType {
+  RSVP_CONFIRMATION
+  EVENT_REMINDER
+  ORDER_CONFIRMATION
+  ORDER_SHIPPED
+  NEWSLETTER
+  WELCOME
+}
+
+enum EmailStatus {
+  PENDING
+  PROCESSING
+  SENT
+  FAILED
+}
+
+/// General-purpose outbound email queue. All email sending goes through here.
+model EmailQueue {
+  id             String      @id @default(cuid())
+  to             String
+  subject        String
+  type           EmailType
+  /// Template data — shape varies by EmailType
+  payload        Json
+  status         EmailStatus @default(PENDING)
+  /// Number of send attempts made
+  attempts       Int         @default(0)
+  /// When the email should be sent (allows future-scheduling)
+  scheduledAt    DateTime    @default(now())
+  sentAt         DateTime?
+  error          String?
+  /// Prevents duplicate entries, e.g. "reminder:{cadenceId}:{rsvpId}"
+  idempotencyKey String?     @unique
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  @@index([status, scheduledAt])
+}
+
+/// Configurable cadences for pre-event reminder emails.
+/// Each row = one reminder sent to all RSVPs N hours before the event.
+model ReminderCadence {
+  id          String   @id @default(cuid())
+  label       String   // e.g. "7 days before"
+  hoursBefore Int      @unique
+  enabled     Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Announcement {
