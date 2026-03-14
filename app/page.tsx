@@ -208,13 +208,6 @@ export default async function HomePage() {
           </div>
         </div>
 
-        {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-40 animate-bounce">
-          <span className="font-cinzel text-xs tracking-widest text-parchment-dark">SCROLL</span>
-          <svg width="16" height="24" viewBox="0 0 16 24" fill="none">
-            <path d="M8 4 L8 20 M2 14 L8 20 L14 14" stroke="#d4af37" strokeWidth="1.5" strokeLinecap="round" />
-          </svg>
-        </div>
       </section>
 
       {/* ─── FEATURED OFFERINGS STRIP ───────────────────────────── */}
