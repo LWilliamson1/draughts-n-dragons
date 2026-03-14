@@ -124,7 +124,7 @@ function DesktopAccountMenu({
             className="flex items-center gap-2.5 px-4 py-3 font-cinzel text-xs tracking-wider uppercase
               text-parchment-dark/70 hover:text-parchment hover:bg-dungeon-purple/20 transition-colors"
           >
-            <span>⚔️</span> View Profile
+            <span>⚔️</span> My Account
           </Link>
           <button
             type="button"
@@ -259,19 +259,24 @@ export default function Header() {
                 Book an Event
               </Link>
 
-              {/* Mobile toggle — avatar when signed in, hamburger/X when not */}
+              {/* Mobile toggle — avatar + "My Account" when signed in, hamburger/X when not */}
               <button
-                className="md:hidden text-parchment-dark hover:text-gold-rune transition-colors"
+                className="md:hidden flex flex-col items-center gap-0.5 text-parchment-dark hover:text-gold-rune transition-colors"
                 aria-label={mobileOpen ? "Close menu" : "Open menu"}
                 onClick={() => setMobileOpen((v) => !v)}
               >
                 {status === "loading" ? (
                   <div className="w-8 h-8 rounded-full bg-dungeon-purple/40 animate-pulse" />
                 ) : isSignedIn ? (
-                  <AvatarCircle
-                    image={image} name={name} email={email} size={36}
-                    className={`border-2 transition-colors ${mobileOpen ? "border-gold-rune" : "border-gold-rune/40"}`}
-                  />
+                  <>
+                    <AvatarCircle
+                      image={image} name={name} email={email} size={36}
+                      className={`border-2 transition-colors ${mobileOpen ? "border-gold-rune" : "border-gold-rune/40"}`}
+                    />
+                    <span className="font-cinzel text-[10px] tracking-widest uppercase text-parchment-dark/70">
+                      My Account
+                    </span>
+                  </>
                 ) : mobileOpen ? (
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <line x1="18" y1="6" x2="6" y2="18" />
@@ -311,7 +316,7 @@ export default function Header() {
                     className="flex items-center gap-2 px-2 py-2.5 rounded-lg font-cinzel text-xs tracking-wider uppercase
                       text-parchment-dark/80 hover:text-parchment hover:bg-dungeon-purple/20 transition-colors"
                   >
-                    <span>⚔️</span> View Profile
+                    <span>⚔️</span> My Account
                   </Link>
                   <button
                     type="button"
