@@ -62,26 +62,23 @@ export async function createRsvp({
   const appUrl = process.env.NEXTAUTH_URL ?? "https://draughtsndragons.com";
   const dateLabel = `${event.dayOfWeek}, ${event.date} ${event.month} ${event.year}`;
 
-  try {
-    await sendEmail({
-      to: email,
-      type: EmailType.RSVP_CONFIRMATION,
-      payload: {
-        name,
-        eventTitle: event.title,
-        eventDate: dateLabel,
-        eventTime: event.time,
-        eventDescription: event.description,
-        quantity,
-        price: event.price,
-        isFree,
-        eventId,
-        appUrl,
-      },
-    });
-  } catch (err) {
-    console.error("[rsvp] confirmation email failed:", err);
-  }
+  const { error: emailError } = await sendEmail({
+    to: email,
+    type: EmailType.RSVP_CONFIRMATION,
+    payload: {
+      name,
+      eventTitle: event.title,
+      eventDate: dateLabel,
+      eventTime: event.time,
+      eventDescription: event.description,
+      quantity,
+      price: event.price,
+      isFree,
+      eventId,
+      appUrl,
+    },
+  });
+  if (emailError) console.error("[rsvp] confirmation email failed:", emailError);
 
   revalidatePath(`/events/${eventId}/rsvp`);
   revalidatePath("/events");
