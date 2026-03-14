@@ -15,14 +15,10 @@ export async function sendEmail({
   type: EmailType;
   payload: Record<string, unknown>;
 }): Promise<{ error?: string }> {
-  // Instantiate lazily so the missing-key error surfaces at runtime (send time)
-  // rather than at module load / build time.
-  const resend = new Resend(process.env.RESEND_API_KEY);
-  const from = process.env.EMAIL_FROM ?? "Draughts & Dragons <noreply@draughtsndragons.com>";
-
-  const { subject, html } = renderTemplate(type, payload);
-
   try {
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    const from = process.env.EMAIL_FROM ?? "Draughts & Dragons <noreply@draughtsndragons.com>";
+    const { subject, html } = renderTemplate(type, payload);
     const { error } = await resend.emails.send({ from, to, subject, html });
     if (error) return { error: error.message };
     return {};
