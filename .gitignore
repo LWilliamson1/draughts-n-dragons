@@ -13,6 +13,9 @@ out/
 
 /app/generated/prisma
 
+# TypeScript
+tsconfig.tsbuildinfo
+
 # Playwright
 test-results/
 playwright-report/
