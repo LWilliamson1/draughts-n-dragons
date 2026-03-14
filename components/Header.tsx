@@ -89,16 +89,21 @@ function DesktopAccountMenu({
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-label="Account menu"
-        className="flex items-center gap-2 group"
+        className="flex flex-col items-center gap-1 group"
       >
-        <AvatarCircle
-          image={image} name={name} email={email} size={32}
-          className={`border transition-colors ${open ? "border-gold-rune" : "border-gold-rune/40 group-hover:border-gold-rune"}`}
-        />
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"
-          className={`text-parchment-dark/50 transition-transform duration-200 ${open ? "rotate-180" : ""}`}>
-          <path d="M6 8L1 3h10z" />
-        </svg>
+        <div className="flex items-center gap-2">
+          <AvatarCircle
+            image={image} name={name} email={email} size={32}
+            className={`border transition-colors ${open ? "border-gold-rune" : "border-gold-rune/40 group-hover:border-gold-rune"}`}
+          />
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"
+            className={`text-parchment-dark/50 transition-transform duration-200 ${open ? "rotate-180" : ""}`}>
+            <path d="M6 8L1 3h10z" />
+          </svg>
+        </div>
+        <span className="font-cinzel text-xs tracking-widest uppercase text-parchment-dark/70 group-hover:text-gold-rune transition-colors duration-200">
+          My Account
+        </span>
       </button>
 
       {open && (
