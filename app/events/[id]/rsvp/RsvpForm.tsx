@@ -109,7 +109,9 @@ export default function RsvpForm({
         <Link
           href={`/auth/signin?callbackUrl=/events/${eventId}/rsvp`}
           className="font-cinzel text-sm tracking-wider uppercase px-6 py-2.5 rounded-xl
-            bg-gold-rune text-dungeon-dark font-bold hover:bg-gold-bright transition-colors"
+            bg-gold-rune text-dungeon-dark font-bold
+            hover:bg-gold-bright transition-all duration-200
+            shadow-[0_2px_14px_rgba(212,175,55,0.45)] hover:shadow-[0_2px_22px_rgba(212,175,55,0.65)]"
         >
           Sign In to RSVP
         </Link>
@@ -160,9 +162,10 @@ export default function RsvpForm({
             href={googleCalendarUrl(calendarEvent)}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl border
-              border-dungeon-purple text-parchment-dark hover:border-arcane-violet hover:text-parchment
-              font-cinzel text-xs tracking-wider uppercase transition-colors"
+            className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl
+              bg-[#4285F4]/20 border border-[#4285F4]/40 text-parchment
+              hover:bg-[#4285F4]/30 hover:border-[#4285F4]/60
+              font-cinzel text-xs tracking-wider uppercase transition-all duration-200"
           >
             <svg viewBox="0 0 24 24" className="w-4 h-4 flex-shrink-0" aria-hidden="true">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -174,9 +177,10 @@ export default function RsvpForm({
           </a>
           <a
             href={`webcal://${typeof window !== "undefined" ? window.location.host : ""}/api/events/${eventId}/ics`}
-            className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl border
-              border-dungeon-purple text-parchment-dark hover:border-arcane-violet hover:text-parchment
-              font-cinzel text-xs tracking-wider uppercase transition-colors"
+            className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl
+              bg-parchment/10 border border-parchment/25 text-parchment
+              hover:bg-parchment/20 hover:border-parchment/40
+              font-cinzel text-xs tracking-wider uppercase transition-all duration-200"
           >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-4 h-4 flex-shrink-0" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
@@ -299,7 +303,9 @@ export default function RsvpForm({
           disabled={isPending}
           className="w-full font-cinzel text-sm tracking-wider uppercase py-3 rounded-xl
             bg-gold-rune text-dungeon-dark font-bold
-            hover:bg-gold-bright transition-colors disabled:opacity-60"
+            hover:bg-gold-bright transition-all duration-200
+            shadow-[0_2px_14px_rgba(212,175,55,0.4)] hover:shadow-[0_2px_22px_rgba(212,175,55,0.6)]
+            disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none"
         >
           {isPending ? "Reserving…" : isFree ? "Reserve My Spot" : `Pay $${total}`}
         </button>

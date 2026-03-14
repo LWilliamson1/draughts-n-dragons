@@ -104,7 +104,6 @@ function DesktopAccountMenu({
       {open && (
         <div className="absolute right-0 top-full mt-2 w-52 rounded-xl border border-dungeon-purple/40
           bg-dungeon-dark shadow-[0_8px_30px_rgba(0,0,0,0.5)] overflow-hidden z-50">
-          {/* Profile summary */}
           <div className="flex items-center gap-3 px-4 py-3 border-b border-dungeon-purple/20">
             <AvatarCircle image={image} name={name} email={email} size={36}
               className="border border-gold-rune/30 flex-shrink-0" />
@@ -143,17 +142,17 @@ export default function Header() {
   const { data: session, status } = useSession() ?? { data: null, status: "loading" as const };
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  // Close mobile menu on navigation
   useEffect(() => { setMobileOpen(false); }, [pathname]);
 
   const isSignedIn = status !== "loading" && !!session;
   const { name, email, image } = session?.user ?? {};
 
   return (
-    <header className="relative z-50">
-      {/* Top decorative bar */}
+    <header className="sticky top-0 z-50">
+      {/* Top gold bar */}
       <div className="h-1 bg-gradient-to-r from-transparent via-gold-rune to-transparent" />
 
+      {/* ── Brand bar ───────────────────────────────────────────── */}
       <div
         className="bg-dungeon-dark border-b border-dungeon-purple"
         style={{ boxShadow: "0 4px 20px rgba(74,45,110,0.5)" }}
@@ -161,7 +160,7 @@ export default function Header() {
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between gap-6">
 
-            {/* Logo + Title */}
+            {/* Logo + wordmark */}
             <Link href="/" className="flex items-center gap-3 group">
               <div className="relative">
                 <div className="absolute inset-0 rounded-full bg-arcane-violet opacity-0 group-hover:opacity-20 transition-opacity duration-500 blur-xl" />
@@ -195,27 +194,7 @@ export default function Header() {
               </div>
             </Link>
 
-            {/* Desktop navigation */}
-            <nav className="hidden md:flex items-center gap-8">
-              {NAV_LINKS.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`nav-link font-cinzel text-sm tracking-widest uppercase transition-all duration-200 ${
-                    pathname === link.href
-                      ? "text-gold-rune"
-                      : "text-parchment-dark hover:text-gold-rune"
-                  }`}
-                >
-                  {link.href === pathname && (
-                    <span className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gold-rune rounded" />
-                  )}
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
-
-            {/* Right-side actions */}
+            {/* Right: cart + account */}
             <div className="flex items-center gap-3">
 
               {/* Cart */}
@@ -244,20 +223,10 @@ export default function Header() {
               {/* Desktop account dropdown */}
               <DesktopAccountMenu session={session} status={status} />
 
-              {/* Book an Event — desktop only */}
-              <Link
-                href="/events"
-                className="hidden md:inline-block font-cinzel text-sm tracking-wider uppercase px-5 py-2.5 rounded border border-gold-rune text-gold-rune
-                  hover:bg-gold-rune hover:text-dungeon-dark transition-all duration-300
-                  shadow-[0_0_10px_rgba(212,175,55,0.2)] hover:shadow-[0_0_20px_rgba(212,175,55,0.5)]"
-              >
-                Book an Event
-              </Link>
-
-              {/* Mobile toggle — avatar + "My Account" when signed in, hamburger/X when not */}
+              {/* Mobile toggle — account only, no nav links */}
               <button
                 className="md:hidden text-parchment-dark hover:text-gold-rune transition-colors"
-                aria-label={mobileOpen ? "Close menu" : "Open menu"}
+                aria-label={mobileOpen ? "Close account menu" : "Open account menu"}
                 onClick={() => setMobileOpen((v) => !v)}
               >
                 {status === "loading" ? (
@@ -283,14 +252,12 @@ export default function Header() {
             </div>
           </div>
 
-          {/* ── Mobile menu ──────────────────────────────────────── */}
+          {/* ── Mobile account panel (account items only) ───────── */}
           {mobileOpen && (
             <div className="md:hidden mt-4 pt-4 border-t border-dungeon-purple/60">
-
-              {/* Signed-in: profile card */}
-              {isSignedIn && (
-                <div className="mb-3 pb-3 border-b border-dungeon-purple/30">
-                  <div className="flex items-center gap-3 px-1 mb-3">
+              {isSignedIn ? (
+                <div className="flex flex-col gap-0.5">
+                  <div className="flex items-center gap-3 px-1 mb-2">
                     <AvatarCircle image={image} name={name} email={email} size={44}
                       className="border border-gold-rune/40 flex-shrink-0" />
                     <div className="min-w-0">
@@ -317,45 +284,56 @@ export default function Header() {
                     <span>🚪</span> Sign Out
                   </button>
                 </div>
+              ) : (
+                <Link
+                  href="/auth/signin"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center justify-center font-cinzel text-xs tracking-widest uppercase
+                    py-2.5 rounded-lg bg-gold-rune text-dungeon-dark font-bold hover:bg-gold-bright transition-colors"
+                >
+                  Sign In / Register
+                </Link>
               )}
-
-              {/* Signed-out: sign in button */}
-              {!isSignedIn && (
-                <div className="mb-3 pb-3 border-b border-dungeon-purple/30">
-                  <Link
-                    href="/auth/signin"
-                    onClick={() => setMobileOpen(false)}
-                    className="flex items-center justify-center font-cinzel text-xs tracking-widest uppercase
-                      py-2.5 rounded-lg bg-gold-rune text-dungeon-dark font-bold hover:bg-gold-bright transition-colors"
-                  >
-                    Sign In / Register
-                  </Link>
-                </div>
-              )}
-
-              {/* Nav links */}
-              <nav className="flex flex-col gap-0.5">
-                {NAV_LINKS.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setMobileOpen(false)}
-                    className={`font-cinzel text-xs tracking-widest uppercase px-2 py-2.5 rounded-lg transition-colors ${
-                      pathname === link.href
-                        ? "text-gold-rune bg-dungeon-purple/20"
-                        : "text-parchment-dark hover:text-parchment hover:bg-dungeon-purple/10"
-                    }`}
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-              </nav>
             </div>
           )}
         </div>
       </div>
 
-      {/* Bottom decorative bar */}
+      {/* ── Nav bar (all screen sizes, sticky with the header) ─── */}
+      <div
+        className="bg-dungeon-dark/95 backdrop-blur-sm border-b border-dungeon-purple/50"
+        style={{ boxShadow: "0 2px 12px rgba(74,45,110,0.35)" }}
+      >
+        <div className="max-w-7xl mx-auto px-4">
+          <nav
+            className="flex items-center h-10 gap-1
+              overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+          >
+            {NAV_LINKS.map((link) => {
+              const isActive = pathname === link.href;
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`relative flex-shrink-0 font-cinzel text-xs tracking-widest uppercase
+                    px-3 py-1.5 rounded transition-all duration-200 whitespace-nowrap
+                    ${isActive
+                      ? "text-gold-rune bg-dungeon-purple/30"
+                      : "text-parchment-dark/70 hover:text-parchment hover:bg-dungeon-purple/20"
+                    }`}
+                >
+                  {isActive && (
+                    <span className="absolute bottom-0 left-2 right-2 h-0.5 bg-gold-rune rounded-full" />
+                  )}
+                  {link.label}
+                </Link>
+              );
+            })}
+          </nav>
+        </div>
+      </div>
+
+      {/* Bottom arcane bar */}
       <div className="h-px bg-gradient-to-r from-transparent via-arcane-violet to-transparent opacity-50" />
     </header>
   );
