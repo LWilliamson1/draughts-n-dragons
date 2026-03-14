@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import Link from "next/link";
 import { createRsvp } from "@/app/actions/rsvp";
 
 interface RsvpFormProps {
@@ -36,6 +37,25 @@ export default function RsvpForm({
   const maxTickets = spotsRemaining !== null ? Math.min(spotsRemaining, 4) : 4;
   const numericPrice = parseFloat(price.replace(/[^0-9.]/g, "")) || 0;
   const total = (numericPrice * tickets).toFixed(2);
+
+  // Not signed in — prompt login
+  if (!userId) {
+    return (
+      <div className="text-center py-8 flex flex-col items-center gap-4">
+        <div className="text-4xl">🔐</div>
+        <p className="font-im-fell text-parchment-dark opacity-70 text-sm">
+          You must be signed in to reserve a spot.
+        </p>
+        <Link
+          href={`/auth/signin?callbackUrl=/events/${eventId}/rsvp`}
+          className="font-cinzel text-sm tracking-wider uppercase px-6 py-2.5 rounded-xl
+            bg-gold-rune text-dungeon-dark font-bold hover:bg-gold-bright transition-colors"
+        >
+          Sign In to RSVP
+        </Link>
+      </div>
+    );
+  }
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -74,7 +94,6 @@ export default function RsvpForm({
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-
       {/* Attendee details */}
       <div>
         <h3 className="font-cinzel text-parchment text-sm tracking-wider uppercase mb-3">

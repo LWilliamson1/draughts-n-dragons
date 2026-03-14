@@ -46,16 +46,23 @@ export default async function AccountPage() {
     ? name.split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase()
     : email?.[0]?.toUpperCase() ?? "?";
 
+  const isGoogle = !!image;
+
   // Fetch user's RSVPs with event data, newest first
   const rsvps = await prisma.rsvp
     .findMany({
       where: { userId: session.user.id },
-      include: { event: { select: { id: true, title: true, icon: true, date: true, dayOfWeek: true, month: true, year: true, time: true, category: true, price: true } } },
+      include: {
+        event: {
+          select: {
+            id: true, title: true, icon: true, date: true, dayOfWeek: true,
+            month: true, year: true, time: true, category: true, price: true,
+          },
+        },
+      },
       orderBy: { createdAt: "desc" },
     })
     .catch(() => []);
-
-  const isGoogle = !!image;
 
   return (
     <div className="min-h-screen bg-dungeon-black text-parchment">
