@@ -137,6 +137,14 @@ export default async function RsvpPage({ params }: { params: Promise<{ id: strin
                 defaultName={session?.user?.name ?? null}
                 defaultEmail={session?.user?.email ?? null}
                 alreadyRsvped={!!existingRsvp}
+                calendarEvent={{
+                  title: event.title,
+                  date: event.date,
+                  month: event.month,
+                  year: event.year,
+                  time: event.time,
+                  description: event.description,
+                }}
               />
             )}
           </div>
