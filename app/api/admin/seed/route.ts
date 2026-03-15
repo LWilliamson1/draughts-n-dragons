@@ -24,7 +24,7 @@ export async function POST(request: Request) {
     await prisma.user.upsert({
       where: { email: adminEmail },
       update: {},
-      create: { email: adminEmail, password: hashed, name: "Admin" },
+      create: { email: adminEmail, password: hashed, name: "Admin", role: "admin" },
     });
     results.push(`Admin user: ${adminEmail}`);
 
