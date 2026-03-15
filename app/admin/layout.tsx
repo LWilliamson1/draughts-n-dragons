@@ -11,7 +11,7 @@ export default async function AdminLayout({
 }) {
   const session = await getServerSession(authOptions);
 
-  // No session means this must be the login page — proxy.ts guards all other /admin routes.
+  // No session means this must be the login page — middleware.ts guards all other /admin routes.
   // Rendering without sidebar avoids an infinite redirect loop on /admin/login.
   if (!session) return <>{children}</>;
 
