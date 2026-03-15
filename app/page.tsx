@@ -90,7 +90,7 @@ export default async function HomePage() {
     <div className="relative overflow-hidden">
 
       {/* ─── HERO ─────────────────────────────────────────────── */}
-      <section className="relative min-h-[92vh] flex flex-col items-center justify-center text-center px-4 overflow-hidden">
+      <section className="relative min-h-[92vh] flex flex-col items-center justify-center text-center px-4 pt-16 overflow-hidden">
 
         {/* Atmospheric background — tavern scene image when available */}
         <div className="absolute inset-0 bg-dungeon-black" />
@@ -199,9 +199,9 @@ export default async function HomePage() {
             <Link
               href="/offerings"
               className="font-cinzel text-sm tracking-wider uppercase px-8 py-3.5 rounded
-                border border-arcane-violet text-arcane-violet
-                hover:bg-arcane-violet hover:text-parchment transition-all duration-300
-                shadow-[0_0_10px_rgba(155,77,202,0.2)] hover:shadow-[0_0_30px_rgba(155,77,202,0.5)]"
+                bg-arcane-violet text-parchment font-bold
+                hover:bg-[#7a3db5] transition-all duration-300
+                shadow-[0_0_20px_rgba(155,77,202,0.4)] hover:shadow-[0_0_40px_rgba(155,77,202,0.7)]"
             >
               Explore Wares
             </Link>
