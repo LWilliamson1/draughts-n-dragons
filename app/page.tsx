@@ -90,7 +90,7 @@ export default async function HomePage() {
     <div className="relative overflow-hidden">
 
       {/* ─── HERO ─────────────────────────────────────────────── */}
-      <section className="relative min-h-[60vh] flex flex-col items-center justify-center text-center px-4 pt-4 overflow-hidden">
+      <section className="relative flex flex-col items-center justify-center text-center px-4 pt-4 overflow-hidden">
 
         {/* Atmospheric background — tavern scene image when available */}
         <div className="absolute inset-0 bg-dungeon-black" />
